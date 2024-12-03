@@ -1,3 +1,6 @@
+# Jetbrains settings files
+*.idea/
+
 # Prerequisites
 *.d
 
