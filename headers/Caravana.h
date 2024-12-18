@@ -2,6 +2,7 @@
 #define INCLUDE_HEADERS_CARAVANA_H_
 
 #include "Coordinates.h"
+// #include "Deserto.h"
 
 class Caravana {
 public:
@@ -20,6 +21,8 @@ public:
 
   int getTripulantes();
   void setTripulantes(unsigned int n);
+
+  // Caravana *getAdjacent(Deserto map);
 
   void apanhaItem();
 
