@@ -1,40 +1,32 @@
-
 #ifndef BUFFER_H
 #define BUFFER_H
+#include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <iostream>
-
 
 class Buffer {
+public:
+  Buffer();
+  ~Buffer();
+  void limparBuffer();
+  void moverCursor(int linha, int coluna);
+  void escreverChar(char c);
+  void escreverString(const std::string &str);
+  void imprimir() const;
 
 private:
   int colunas;
   int linhas;
 
-  char** buffer;
+  char **buffer;
   int cursorLinha;
   int cursorColuna;
 
-  void alocarBuffer() ;
+  void alocarBuffer();
   void liberarBuffer();
-  void validarPosicao(int linha, int coluna) const ;
-
-
-  public:
-  Buffer();
-  ~Buffer();
-  void limparBuffer()   ;
-  void moverCursor(int linha, int coluna);
-  void escreverChar(char c) ;
-  void escreverString(const std::string& str);
-  void imprimir() const;
-
-
+  void validarPosicao(int linha, int coluna) const;
 };
 
-
-
-#endif //BUFFER_H
+#endif // BUFFER_H

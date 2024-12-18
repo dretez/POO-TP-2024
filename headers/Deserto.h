@@ -1,0 +1,6 @@
+#ifndef INCLUDE_HEADERS_DESERTO_H_
+#define INCLUDE_HEADERS_DESERTO_H_
+
+class Deserto {};
+
+#endif // INCLUDE_HEADERS_DESERTO_H_

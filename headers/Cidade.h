@@ -1,0 +1,6 @@
+#ifndef INCLUDE_HEADERS_CIDADE_H_
+#define INCLUDE_HEADERS_CIDADE_H_
+
+class Cidade {};
+
+#endif // INCLUDE_HEADERS_CIDADE_H_
