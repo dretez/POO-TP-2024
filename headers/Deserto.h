@@ -1,18 +1,80 @@
 #ifndef INCLUDE_HEADERS_DESERTO_H_
 #define INCLUDE_HEADERS_DESERTO_H_
 
-#include "PiecesDeserto.h"
+#include "Caravana.h"
+#include "Coordinates.h"
+#include "Item.h"
 
+#include <cstdint>
+#include <cstdlib>
 #include <memory>
 #include <vector>
 
+#define DESERT_CELL 0
+#define MOUNT_CELL 1
+#define CITY_CELL 2
+
+#define STRM_FLAG_BIT (unsigned)1 << 0
+#define CRVN_FLAG_BIT (unsigned)1 << 1
+
 using namespace std;
+
+class Cidade {
+public:
+  Cidade(char n);
+
+  char getNome();
+
+  vector<weak_ptr<Caravana>> getCaravanas();
+  void addCaravana(Caravana car);
+  void remCaravana(int id);
+
+private:
+  char nome;
+  vector<weak_ptr<Caravana>> cars;
+};
+
+class CellFlags {
+public:
+  CellFlags(uint8_t f = 0);
+
+  void setAll();
+  void unsetAll();
+  void toggleAll();
+  uint8_t getFlags() const;
+
+  void setStorm();
+  void unsetStorm();
+  void toggleStorm();
+  bool getStorm() const;
+
+  void setCaravana();
+  void unsetCaravana();
+  void toggleCaravana();
+  bool getCaravana() const;
+
+private:
+  union {
+    uint8_t all;
+    uint8_t storm;
+    uint8_t caravana;
+  } flags;
+};
+
+class Cell : public CellFlags {
+public:
+  Cell(unsigned short type);
+
+private:
+  unsigned short type;
+};
 
 class Deserto {
 public:
-  Deserto();
+  Deserto(unsigned int w, unsigned int h);
 
 private:
+  unsigned int width, height;
   unsigned int maxItens;
   vector<Cell> mapa;
   vector<shared_ptr<Item>> itens;
