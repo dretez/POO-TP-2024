@@ -2,6 +2,7 @@
 #define INCLUDE_HEADERS_USER_H_
 
 #include "Caravana.h"
+#include "Coordinates.h"
 #include "Deserto.h"
 
 #include <memory>
@@ -11,15 +12,16 @@ using namespace std;
 
 class User {
 public:
-  User(int money);
+  User(Deserto &mapa, int money);
 
-  void buyTripulante(int qtd, Caravana &car);
-  void buyCaravana(Cidade &cid, int preco = 100);
-  void buyMercadoria(Caravana &car, int qtd, int preco = 1);
+  template <typename T> void buyCaravana(Cidade &cid, int preco = 100);
+  void buyTripulante(Caravana &car, unsigned int qtd);
+  void buyMercadoria(Caravana &car, unsigned int qtd, int preco = 1);
   void sellMercadoria(Caravana &car, int preco = 2);
 
 private:
   int moedas;
+  Deserto &world;
   vector<shared_ptr<Caravana>> caravanas;
 };
 

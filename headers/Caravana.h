@@ -19,8 +19,15 @@ public:
   void usaAgua(unsigned int qtd);
   void refillAgua();
 
+  unsigned int getMaxMerc();
+  int getMerc();
+  void setMerc(int n);
+  void changeMerc(int qtd);
+
+  unsigned int getMaxTripulantes();
   int getTripulantes();
   void setTripulantes(unsigned int n);
+  void changeTripulantes(int n);
 
   void apanhaItem(Item i);
 

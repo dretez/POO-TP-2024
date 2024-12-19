@@ -5,6 +5,7 @@
 #include "Coordinates.h"
 #include "Item.h"
 
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
@@ -26,12 +27,11 @@ public:
   char getNome();
 
   vector<weak_ptr<Caravana>> getCaravanas();
-  void addCaravana(Caravana car);
-  void remCaravana(int id);
+  template <typename T> shared_ptr<Caravana> sellCaravana();
 
 private:
   char nome;
-  vector<weak_ptr<Caravana>> cars;
+  array<shared_ptr<Caravana>, 3> caravanasForSale;
 };
 
 class CellFlags {
@@ -65,6 +65,8 @@ class Cell : public CellFlags {
 public:
   Cell(unsigned short type);
 
+  unsigned short getType() const;
+
 private:
   unsigned short type;
 };
@@ -72,6 +74,8 @@ private:
 class Deserto {
 public:
   Deserto(unsigned int w, unsigned int h);
+
+  Cell &operator[](Coords);
 
 private:
   unsigned int width, height;
