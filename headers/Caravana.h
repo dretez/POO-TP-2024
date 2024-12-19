@@ -15,27 +15,30 @@ public:
   void movAuto();
   void movEmpty();
 
-  int getAgua();
+  unsigned int getMaxAgua();
+  unsigned int getAgua();
   void usaAgua(unsigned int qtd);
   void refillAgua();
 
   unsigned int getMaxMerc();
-  int getMerc();
-  void setMerc(int n);
+  unsigned int getMerc();
+  void setMerc(unsigned int n);
   void changeMerc(int qtd);
 
   unsigned int getMaxTripulantes();
-  int getTripulantes();
+  unsigned int getTripulantes();
   void setTripulantes(unsigned int n);
   void changeTripulantes(int n);
 
   void apanhaItem(Item i);
 
+  int attack();
+
 private:
   int id;
   Coords pos;
   unsigned int capTrip, capMerc, capAgua;
-  int tripulantes, mercadoria, agua;
+  unsigned int tripulantes, mercadoria, agua;
   int modoDesloc;
 };
 
