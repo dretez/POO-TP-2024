@@ -1,9 +1,16 @@
 #ifndef INCLUDE_HEADERS_SIMULADOR_H_
 #define INCLUDE_HEADERS_SIMULADOR_H_
 
+#include "Caravana.h"
 #include "Deserto.h"
+#include "Timer.h"
+#include "User.h"
 
+#include <cstdlib>
+#include <deque>
+#include <memory>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -14,7 +21,7 @@ public:
   void loadConfFile(string confFileName);
   void saveConfFile(string confFileName);
 
-private:
+protected:
   unsigned int width, height;
   string savedMap;
   int initMoedas;
@@ -27,16 +34,19 @@ private:
   unsigned int barbarianLifeTime;
 };
 
-class Simulador {
+class Simulador : public SimConfig {
 public:
-  Simulador();
+  Simulador(unsigned int startTime = 1);
 
   void start();
   void fase1();
   void fase2();
 
+  void execCmd(string cmd);
+
 private:
-  SimConfig conf;
+  deque<string> cmdQueue;
+  Timer timer;
 };
 
 #endif // INCLUDE_HEADERS_SIMULADOR_H_

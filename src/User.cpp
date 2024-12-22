@@ -1,6 +1,7 @@
 #include "../headers/User.h"
 
-User::User(Deserto &mapa, int money) : world(mapa), moedas(money) {};
+User::User(Deserto &mapa, int money, vector<Caravana> &cars)
+    : world(mapa), moedas(money), caravanas(cars) {};
 
 template <typename T> void User::buyCaravana(Cidade &cid, int preco) {
   cid.sellCaravana<T>();
