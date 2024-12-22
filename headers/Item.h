@@ -13,8 +13,8 @@ class Item {
 public:
   Item(Coords xy, int tv = 20);
 
+  Coords getPos();
   int getTipo();
-
   void decrTempoVida();
 
 private:

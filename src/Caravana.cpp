@@ -1,5 +1,4 @@
 #include "../headers/Caravana.h"
-#include <cstdlib>
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)
@@ -34,6 +33,116 @@ void Caravana::changeTripulantes(int n) {
 }
 
 int Caravana::attack() { return rand() % (tripulantes + 1); }
+
+void Caravana::mvUsr(Coords target) {
+  if (mvQueue >= maxMvQueue)
+    return;
+  Coords oldpos = mvQueue > 0 ? targetpos.at(mvQueue - 1) : pos;
+  targetpos.at(mvQueue) = oldpos + target.normalize();
+  mvQueue++;
+}
+void Caravana::mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
+                      vector<Item> &itens) {
+  return;
+}
+void Caravana::mvEmpty() { return; }
+
+void CaravanaComercio::mvAuto(vector<Caravana> &usr,
+                              vector<CaravanaBarbara> &enemy,
+                              vector<Item> &items) {
+  for (int i = 0; i < maxMvQueue; i++) {
+    vector<Item>::iterator ii = items.begin();
+    int minDist = getPos().distance(ii->getPos());
+    vector<Item>::iterator auxi = ii;
+    for (ii++; ii != items.end(); ii++) {
+      if (minDist > getPos().distance(ii->getPos())) {
+        minDist = getPos().distance(ii->getPos());
+        auxi = ii;
+      }
+    }
+    if (minDist <= 2) {
+      /* WARN: Uma caravana pode aproximar-se do item pela diagonal, o que
+       * impossibilitaria a recolha do item. Este problema precisa de ser
+       * resolvido.
+       */
+      /* NOTE: Possível solução: se o item estiver a uma distância de 1,
+       * verificamos se está numa posição adjacente, se estiver recolhemos o
+       * item, senão movemo-nos para uma coordenada adjacente ao item aleatória
+       * com uma distância à coordenada atual de 1.
+       */
+      mvUsr(auxi->getPos());
+      return;
+    }
+
+    vector<Caravana>::iterator ic = usr.begin();
+    minDist = getPos().distance(ic->getPos());
+    vector<Caravana>::iterator auxc = ic;
+
+    for (ic++; ic != usr.end(); ic++) {
+      if (ic.base() == this)
+        continue;
+      if (minDist > getPos().distance(ic->getPos())) {
+        minDist = getPos().distance(ic->getPos());
+        auxc = ic;
+      }
+    }
+
+    if (minDist > 1) {
+      mvUsr(auxc->getPos());
+    }
+  }
+}
+
+void CaravanaComercio::mvEmpty() {
+  // move random 5 times
+  if (lifetime == 0) {
+    // commit seppuku
+  }
+  lifetime--;
+}
+
+void CaravanaMilitar::mvAuto(vector<Caravana> &usr,
+                             vector<CaravanaBarbara> &enemy,
+                             vector<Item> &items) {
+  vector<Caravana>::iterator ic = usr.begin();
+  int minDist = getPos().distance(ic->getPos());
+  vector<Caravana>::iterator auxi = ic;
+
+  for (ic++; ic != usr.end(); ic++) {
+    if (ic.base() == this)
+      continue;
+    if (minDist > getPos().distance(ic->getPos())) {
+      minDist = getPos().distance(ic->getPos());
+      auxi = ic;
+    }
+  }
+
+  if (minDist <= 6) {
+    mvUsr(auxi->getPos());
+  }
+}
+
+void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
+                             vector<CaravanaBarbara> &enemy,
+                             vector<Item> &itens) {
+  /* Moves randomly across the map. If it detects a barbarian caravan within 8
+   * cells, it performs a hit-and-run:
+   *  - It tries to approach the barbarian caravan;
+   *  - Once the barbarians are within a distance of 1, it attempts to convert
+   *    them to a user caravan (this action has a 5% sucess rate);
+   *  - After "hitting", the secret caravan changes to "flee" mode, where it
+   *    gets as far away from the barbarians as possible.
+   */
+}
+
+void CaravanaSecreta::mvEmpty() {
+  // destroy any caravan within a distance of 2
+  // commit seppuku
+}
+
+void CaravanaBarbara::mvEmpty() {
+  // commit seppuku
+}
 
 void Caravana::apanhaItem(Item i) {
   switch (i.getTipo()) {
