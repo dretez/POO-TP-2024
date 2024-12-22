@@ -66,6 +66,7 @@ public:
   Cell(unsigned short type);
 
   unsigned short getType() const;
+  Coords getCoords() const;
 
 private:
   unsigned short type;
@@ -75,13 +76,16 @@ class Deserto {
 public:
   Deserto(unsigned int w, unsigned int h);
 
+  Cell &getRandomFreeCell();
+  vector<Item> &getAllItems();
+
   Cell &operator[](Coords);
 
 private:
   unsigned int width, height;
   unsigned int maxItens;
   vector<Cell> mapa;
-  vector<shared_ptr<Item>> itens;
+  vector<Item> itens;
 };
 
 #endif // INCLUDE_HEADERS_DESERTO_H_
