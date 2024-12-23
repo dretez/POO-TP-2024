@@ -1,4 +1,5 @@
 #include "../headers/Simulador.h"
+#include <map>
 
 Simulador::Simulador(unsigned int startTime) : timer(startTime) {}
 
@@ -34,7 +35,20 @@ void Simulador::fase2() {
 
     vector<Caravana>::iterator uc;
     for (uc = userCars.begin(); uc != userCars.end(); uc++) {
-      if (uc->getMvMode() == MOV_AUTO) {
+      switch (uc->getMvMode()) {
+      case MOV_USR: {
+        map<unsigned int, Coords>::iterator i;
+        for (i = uc->getTargetPath().begin(); i != uc->getTargetPath().end();
+             i++) {
+          if (!world[i->second].isValid()) {
+            break;
+          }
+          uc->setPos(i->second);
+        }
+        uc->resetTargetPath();
+        break;
+      }
+      case MOV_AUTO:
         uc->mvAuto(userCars, enemyCars, world.getAllItems());
       }
     }

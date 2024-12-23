@@ -5,6 +5,7 @@
 #include "Item.h"
 
 #include <cstdlib>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -27,15 +28,14 @@ public:
   void setPos(Coords pos);
   Coords getPos(Coords pos);
 
-  void resetQueuedMoves();
-
-  void setMvMode(unsigned int mode);
-  unsigned int getMvMode();
-
-  virtual void mvUsr(Coords dir);
+  virtual void mv(Coords dir);
   virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
                       vector<Item> &);
   virtual void mvEmpty();
+  void setMvMode(unsigned int mode);
+  unsigned int getMvMode();
+  map<unsigned int, Coords> getTargetPath();
+  void resetTargetPath();
 
   unsigned int getMaxAgua();
   unsigned int getAgua();
@@ -57,12 +57,12 @@ public:
   int attack();
 
 protected:
-  unsigned int mvMode, mvQueue, maxMvQueue;
+  unsigned int mvMode, maxTargPathSize;
 
 private:
   int id;
   Coords pos;
-  vector<Coords> targetpos;
+  map<unsigned int, Coords> targetPath;
   unsigned int capTrip, capMerc, capAgua;
   unsigned int tripulantes, mercadoria, agua;
 };

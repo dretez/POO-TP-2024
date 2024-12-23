@@ -1,4 +1,5 @@
 #include "../headers/Caravana.h"
+#include <map>
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)
@@ -34,12 +35,14 @@ void Caravana::changeTripulantes(int n) {
 
 int Caravana::attack() { return rand() % (tripulantes + 1); }
 
-void Caravana::mvUsr(Coords target) {
-  if (mvQueue >= maxMvQueue)
+void Caravana::resetTargetPath() { targetPath.clear(); }
+
+void Caravana::mv(Coords target) {
+  if (targetPath.size() >= maxTargPathSize)
     return;
-  Coords oldpos = mvQueue > 0 ? targetpos.at(mvQueue - 1) : pos;
-  targetpos.at(mvQueue) = oldpos + target.normalize();
-  mvQueue++;
+  Coords oldpos =
+      targetPath.size() > 0 ? targetPath.at(targetPath.size() - 1) : pos;
+  targetPath.insert({targetPath.size(), oldpos + target.normalize()});
 }
 void Caravana::mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
                       vector<Item> &itens) {
@@ -50,7 +53,7 @@ void Caravana::mvEmpty() { return; }
 void CaravanaComercio::mvAuto(vector<Caravana> &usr,
                               vector<CaravanaBarbara> &enemy,
                               vector<Item> &items) {
-  for (int i = 0; i < maxMvQueue; i++) {
+  for (int i = 0; i < maxTargPathSize; i++) {
     vector<Item>::iterator ii = items.begin();
     int minDist = getPos().distance(ii->getPos());
     vector<Item>::iterator auxi = ii;
@@ -70,7 +73,7 @@ void CaravanaComercio::mvAuto(vector<Caravana> &usr,
        * item, senão movemo-nos para uma coordenada adjacente ao item aleatória
        * com uma distância à coordenada atual de 1.
        */
-      mvUsr(auxi->getPos());
+      mv(auxi->getPos());
       return;
     }
 
@@ -88,7 +91,7 @@ void CaravanaComercio::mvAuto(vector<Caravana> &usr,
     }
 
     if (minDist > 1) {
-      mvUsr(auxc->getPos());
+      mv(auxc->getPos());
     }
   }
 }
@@ -118,7 +121,7 @@ void CaravanaMilitar::mvAuto(vector<Caravana> &usr,
   }
 
   if (minDist <= 6) {
-    mvUsr(auxi->getPos());
+    mv(auxi->getPos());
   }
 }
 

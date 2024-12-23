@@ -67,6 +67,7 @@ public:
 
   unsigned short getType() const;
   Coords getCoords() const;
+  bool isValid() const;
 
 private:
   unsigned short type;
