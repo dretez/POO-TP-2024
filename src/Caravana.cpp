@@ -1,6 +1,5 @@
 #include "../headers/Caravanas.h"
 #include "../headers/SimComponents.h"
-#include <vector>
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)

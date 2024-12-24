@@ -27,4 +27,4 @@ bool CellFlags::getCaravana() const { return flags & CRVN_FLAG_BIT; }
 
 /************************************ CELL ************************************/
 
-Cell::Cell(unsigned short t) : CellFlags(0), type(t) {}
+Cell::Cell(unsigned short t, Coords p) : CellFlags(0), type(t), pos(p) {}

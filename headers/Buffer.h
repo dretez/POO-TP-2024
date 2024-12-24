@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "SimComponents.h"
+
 class Buffer {
 public:
   Buffer();

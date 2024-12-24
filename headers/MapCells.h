@@ -39,7 +39,7 @@ private:
 
 class Cell : public CellFlags {
 public:
-  Cell(unsigned short type);
+  Cell(unsigned short type, Coords p);
 
   unsigned short getType() const;
   Coords getCoords() const;
@@ -47,6 +47,7 @@ public:
 
 private:
   unsigned short type;
+  const Coords pos;
 };
 
 #endif // INCLUDE_HEADERS_MAPCELLS_H_

@@ -37,7 +37,7 @@ private:
   vector<Caravana> &caravanas;
 };
 
-class Deserto {
+class Deserto : private Coords {
 public:
   Deserto(unsigned int w, unsigned int h);
 
@@ -47,7 +47,6 @@ public:
   Cell &operator[](Coords);
 
 private:
-  unsigned int width, height;
   unsigned int maxItens;
   vector<Cell> mapa;
   vector<Item> itens;
