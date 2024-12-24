@@ -1,5 +1,4 @@
 #include "../headers/Simulador.h"
-#include <map>
 
 Simulador::Simulador(unsigned int startTime) : timer(startTime) {}
 

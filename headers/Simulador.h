@@ -1,16 +1,15 @@
 #ifndef INCLUDE_HEADERS_SIMULADOR_H_
 #define INCLUDE_HEADERS_SIMULADOR_H_
 
-#include "Caravana.h"
-#include "Deserto.h"
-#include "Timer.h"
-#include "User.h"
-
 #include <cstdlib>
 #include <deque>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "Caravanas.h"
+#include "SimComponents.h"
+#include "Timer.h"
 
 using namespace std;
 

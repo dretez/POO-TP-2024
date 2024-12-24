@@ -1,11 +1,9 @@
-#include "../headers/User.h"
+#include "../headers/SimComponents.h"
 
 User::User(Deserto &mapa, int money, vector<Caravana> &cars)
     : world(mapa), moedas(money), caravanas(cars) {};
 
-template <typename T> void User::buyCaravana(Cidade &cid, int preco) {
-  cid.sellCaravana<T>();
-}
+void User::buyCaravana(Cidade &cid, int preco) {}
 
 void User::buyTripulante(Caravana &car, unsigned int qtd) {
   if (world[car.getPos()].getType() != CITY_CELL)

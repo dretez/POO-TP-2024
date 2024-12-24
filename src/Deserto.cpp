@@ -1,4 +1,4 @@
-#include "../headers/Deserto.h"
+#include "../headers/SimComponents.h"
 
 Item::Item(Coords xy, int tv) : pos(xy), tempovida(tv), tipo(rand() % 5) {}
 

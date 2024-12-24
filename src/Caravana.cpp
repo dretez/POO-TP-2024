@@ -1,5 +1,6 @@
-#include "../headers/Caravana.h"
-#include <map>
+#include "../headers/Caravanas.h"
+#include "../headers/SimComponents.h"
+#include <vector>
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)
@@ -44,8 +45,9 @@ void Caravana::mv(Coords target) {
       targetPath.size() > 0 ? targetPath.at(targetPath.size() - 1) : pos;
   targetPath.insert({targetPath.size(), oldpos + target.normalize()});
 }
-void Caravana::mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &itens) {
+void Caravana::mvAuto(const vector<Caravana> &usr,
+                      const vector<CaravanaBarbara> &enemy,
+                      const vector<Item> &itens) {
   return;
 }
 void Caravana::mvEmpty() { return; }
@@ -147,19 +149,22 @@ void CaravanaBarbara::mvEmpty() {
   // commit seppuku
 }
 
-void Caravana::apanhaItem(Item i) {
-  switch (i.getTipo()) {
+int Caravana::apanhaItem(vector<Item> &items, vector<Item>::iterator &i,
+                         User &usr) {
+  Item cpy = *i.base();
+  items.erase(i);
+  switch (i->getTipo()) {
   case ITEM_PANDORA:
     tripulantes /= 5;
     break;
   case ITEM_TESOURO:
-    // adiciona 10% às moedas do utilizador
+    usr.changeMoedas(usr.getMoedas() * 1.1);
     break;
   case ITEM_JAULA:
     changeTripulantes((rand() % 10) + 1);
     break;
   case ITEM_MINA:
-    // commit seppuku
+    return 1;
     break;
   case ITEM_SURPRESA:
     // idk yet
@@ -167,4 +172,5 @@ void Caravana::apanhaItem(Item i) {
   default:
     break;
   }
+  return 0;
 }
