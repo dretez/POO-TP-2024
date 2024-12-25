@@ -14,7 +14,6 @@ using namespace std;
 
 class User;
 class Deserto;
-class Item;
 class Caravana;
 class CaravanaBarbara;
 
@@ -42,32 +41,26 @@ public:
   Deserto(unsigned int w, unsigned int h);
 
   Cell &getRandomFreeCell();
-  vector<Item> &getAllItems();
+  // vector<Item> &getAllItems();
 
   Cell &operator[](Coords);
 
 private:
   unsigned int maxItens;
   vector<Cell> mapa;
-  vector<Item> itens;
 };
-
-#define ITEM_PANDORA 0
-#define ITEM_TESOURO 1
-#define ITEM_JAULA 2
-#define ITEM_MINA 3
-#define ITEM_SURPRESA 4
 
 class Item {
 public:
   Item(Coords xy, int tv = 20);
 
-  int getTipo();
   Coords getPos();
   void decrTempoVida();
+  virtual void collect(User &, vector<Caravana>::iterator &,
+                       vector<Caravana> &);
 
 private:
-  int tempovida, tipo;
+  int tempovida;
   Coords pos;
 };
 
@@ -99,6 +92,7 @@ public:
   void setTripulantes(unsigned int n);
   void changeTripulantes(int n);
 
+  unsigned int getLifetime();
   void setMvMode(unsigned int mode);
   unsigned int getMvMode();
   map<unsigned int, Coords> getTargetPath();
@@ -110,10 +104,12 @@ public:
                       const vector<Item> &);
 
   int attack();
-  int apanhaItem(vector<Item> &, vector<Item>::iterator &, User &);
 
 protected:
+  unsigned int getMaxMvs();
+
   unsigned int mvMode, maxTargPathSize;
+  unsigned int lifetime;
 
 private:
   int id;
@@ -121,6 +117,7 @@ private:
   map<unsigned int, Coords> targetPath;
   unsigned int capTrip, capMerc, capAgua;
   unsigned int tripulantes, mercadoria, agua;
+  bool superSpeed;
 };
 
 #endif // INCLUDE_HEADERS_CARAVANA_H_

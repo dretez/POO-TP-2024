@@ -4,11 +4,11 @@
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)
     : pos(xy), tripulantes(trip), capTrip(capT), capMerc(capC), capAgua(capA),
-      mercadoria(0), agua(capA / 2) {}
+      mercadoria(0), agua(capA / 2), superSpeed(false) {}
 
 CaravanaComercio::CaravanaComercio(Coords xy) : Caravana(xy, 20, 20, 40, 200) {}
 CaravanaMilitar::CaravanaMilitar(Coords xy) : Caravana(xy, 20, 40, 5, 400) {}
-CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 0, 0, 0, 0) {}
+CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 5, 10, 5, 100) {}
 CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int tv)
     : Caravana(xy, 40, 40, 0, 0) {}
 
@@ -35,26 +35,36 @@ void Caravana::changeTripulantes(int n) {
 
 int Caravana::attack() { return rand() % (tripulantes + 1); }
 
+unsigned int Caravana::getMaxMvs() {
+  return maxTargPathSize * (superSpeed ? 2 : 1);
+}
 void Caravana::resetTargetPath() { targetPath.clear(); }
 
 void Caravana::mv(Coords target) {
-  if (targetPath.size() >= maxTargPathSize)
+  if (targetPath.size() >= getMaxMvs())
     return;
   Coords oldpos =
       targetPath.size() > 0 ? targetPath.at(targetPath.size() - 1) : pos;
   targetPath.insert({targetPath.size(), oldpos + target.normalize()});
 }
+void Caravana::mvEmpty() { return; }
 void Caravana::mvAuto(const vector<Caravana> &usr,
                       const vector<CaravanaBarbara> &enemy,
                       const vector<Item> &itens) {
   return;
 }
-void Caravana::mvEmpty() { return; }
 
+void CaravanaComercio::mvEmpty() {
+  // move random 5 times
+  if (lifetime == 0) {
+    // commit seppuku
+  }
+  lifetime--;
+}
 void CaravanaComercio::mvAuto(vector<Caravana> &usr,
                               vector<CaravanaBarbara> &enemy,
                               vector<Item> &items) {
-  for (int i = 0; i < maxTargPathSize; i++) {
+  for (int i = 0; i < getMaxMvs(); i++) {
     vector<Item>::iterator ii = items.begin();
     int minDist = getPos().distance(ii->getPos());
     vector<Item>::iterator auxi = ii;
@@ -97,14 +107,7 @@ void CaravanaComercio::mvAuto(vector<Caravana> &usr,
   }
 }
 
-void CaravanaComercio::mvEmpty() {
-  // move random 5 times
-  if (lifetime == 0) {
-    // commit seppuku
-  }
-  lifetime--;
-}
-
+void CaravanaMilitar::mvEmpty() {}
 void CaravanaMilitar::mvAuto(vector<Caravana> &usr,
                              vector<CaravanaBarbara> &enemy,
                              vector<Item> &items) {
@@ -126,6 +129,10 @@ void CaravanaMilitar::mvAuto(vector<Caravana> &usr,
   }
 }
 
+void CaravanaSecreta::mvEmpty() {
+  // destroy any caravan within a distance of 2
+  // commit seppuku
+}
 void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
                              vector<CaravanaBarbara> &enemy,
                              vector<Item> &itens) {
@@ -139,37 +146,9 @@ void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
    */
 }
 
-void CaravanaSecreta::mvEmpty() {
-  // destroy any caravan within a distance of 2
-  // commit seppuku
-}
-
 void CaravanaBarbara::mvEmpty() {
   // commit seppuku
 }
-
-int Caravana::apanhaItem(vector<Item> &items, vector<Item>::iterator &i,
-                         User &usr) {
-  Item cpy = *i.base();
-  items.erase(i);
-  switch (i->getTipo()) {
-  case ITEM_PANDORA:
-    tripulantes /= 5;
-    break;
-  case ITEM_TESOURO:
-    usr.changeMoedas(usr.getMoedas() * 1.1);
-    break;
-  case ITEM_JAULA:
-    changeTripulantes((rand() % 10) + 1);
-    break;
-  case ITEM_MINA:
-    return 1;
-    break;
-  case ITEM_SURPRESA:
-    // idk yet
-    break;
-  default:
-    break;
-  }
-  return 0;
-}
+void CaravanaBarbara::mvAuto(vector<Caravana> &usr,
+                             vector<CaravanaBarbara> &enemy,
+                             vector<Item> &itens) {}

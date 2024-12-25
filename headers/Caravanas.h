@@ -10,9 +10,6 @@ public:
   virtual void mvEmpty();
   virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
                       vector<Item> &);
-
-private:
-  unsigned int lifetime;
 };
 
 class CaravanaMilitar : public Caravana {
@@ -22,8 +19,6 @@ public:
   virtual void mvEmpty();
   virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
                       vector<Item> &);
-
-private:
 };
 
 class CaravanaSecreta : public Caravana {
@@ -33,8 +28,6 @@ public:
   virtual void mvEmpty();
   virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
                       vector<Item> &);
-
-private:
 };
 
 class CaravanaBarbara : public Caravana {
@@ -42,10 +35,8 @@ public:
   CaravanaBarbara(Coords xy, unsigned int tv = 60);
 
   virtual void mvEmpty();
-  virtual void mvAuto(vector<Caravana> &usr);
-
-private:
-  unsigned int tempovida;
+  virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
+                      vector<Item> &);
 };
 
 #endif // INCLUDE_HEADERS_CARAVANAS_H_

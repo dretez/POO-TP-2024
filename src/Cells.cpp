@@ -28,3 +28,7 @@ bool CellFlags::getCaravana() const { return flags & CRVN_FLAG_BIT; }
 /************************************ CELL ************************************/
 
 Cell::Cell(unsigned short t, Coords p) : CellFlags(0), type(t), pos(p) {}
+
+bool Cell::isValid() const {
+  return (type != MOUNT_CELL) && (!getCaravana() | (type == CITY_CELL));
+}

@@ -21,6 +21,7 @@ void Simulador::fase2() {
   vector<Caravana> userCars;
   vector<CaravanaBarbara> enemyCars;
   User utilizador(world, initMoedas, userCars);
+  vector<Item> items;
 
   while (1) {
     // print buffer
@@ -47,8 +48,14 @@ void Simulador::fase2() {
         uc->resetTargetPath();
         break;
       }
+      case MOV_RUN:
       case MOV_AUTO:
-        uc->mvAuto(userCars, enemyCars, world.getAllItems());
+        uc->mvAuto(userCars, enemyCars, items);
+      case MOV_EMPTY:
+        uc->mvEmpty();
+        if (uc->getLifetime() == 0) {
+          userCars.erase(uc);
+        }
       }
     }
 
@@ -59,7 +66,7 @@ void Simulador::fase2() {
     }
     vector<CaravanaBarbara>::iterator bc;
     for (bc = enemyCars.begin(); bc != enemyCars.end(); bc++) {
-      bc->mvAuto(userCars);
+      bc->mvAuto(userCars, enemyCars, items);
     }
 
     //
