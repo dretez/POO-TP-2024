@@ -23,12 +23,13 @@ bool CellFlags::getStorm() const { return flags & STRM_FLAG_BIT; }
 void CellFlags::setCaravana() { flags |= CRVN_FLAG_BIT; }
 void CellFlags::unsetCaravana() { flags &= ~CRVN_FLAG_BIT; }
 void CellFlags::toggleCaravana() { flags ^= CRVN_FLAG_BIT; }
-bool CellFlags::getCaravana() const { return flags & CRVN_FLAG_BIT; }
+bool CellFlags::hasCaravana() const { return flags & CRVN_FLAG_BIT; }
 
 /************************************ CELL ************************************/
 
-Cell::Cell(unsigned short t, Coords p) : CellFlags(0), type(t), pos(p) {}
+Cell::Cell(unsigned short t, Coords p)
+    : CellFlags(0), type(t), pos(p), car(nullptr) {}
 
 bool Cell::isValid() const {
-  return (type != MOUNT_CELL) && (!getCaravana() | (type == CITY_CELL));
+  return (type != MOUNT_CELL) && (!hasCaravana() | (type == CITY_CELL));
 }

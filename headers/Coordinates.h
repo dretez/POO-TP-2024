@@ -1,11 +1,14 @@
 #ifndef INCLUDE_HEADERS_COORDINATES_H_
 #define INCLUDE_HEADERS_COORDINATES_H_
 
+#include <array>
 #include <cmath>
+
+using namespace std;
 
 class Coords {
 public:
-  Coords(int xx, int yy, bool inbounds = true);
+  Coords(int xx = 0, int yy = 0, bool inbounds = true);
 
   int getx() const;
   void setx(int xx);
@@ -15,6 +18,7 @@ public:
   Coords normalize() const;
   Coords abs() const;
   bool isAdjacent(Coords) const;
+  array<Coords, 4> getAdjacent() const;
   Coords inbounds() const;
 
   Coords operator+(Coords) const;
@@ -25,7 +29,7 @@ public:
   bool operator==(Coords) const;
 
 protected:
-  void setWorldDimensions(int w, int h);
+  static void setWorldDimensions(int w, int h);
   int vecLen() const;
   static int width, height;
 

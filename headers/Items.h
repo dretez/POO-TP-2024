@@ -1,36 +1,61 @@
 #ifndef INCLUDE_HEADERS_ITEMS_H_
 #define INCLUDE_HEADERS_ITEMS_H_
 
-#include "SimComponents.h"
+#include <vector>
 
-#define ITEM_PANDORA 0
-#define ITEM_TESOURO 1
-#define ITEM_JAULA 2
-#define ITEM_MINA 3
-#define ITEM_SURPRESA 4
+#include "Coordinates.h"
+
+class User;
+class Caravana;
+
+#define ITEM_COUNT 5
+
+class Item {
+public:
+  Item(Coords xy, int tv = 20);
+
+  Coords getPos();
+  void decrTempoVida();
+  virtual void collect(User &, vector<Caravana>::iterator &,
+                       vector<Caravana> &);
+
+private:
+  int tempovida;
+  Coords pos;
+};
+
+class RandItemGenerator {
+public:
+  Item get(Coords xy, int tv) const;
+};
 
 class ItemPandora : public Item {
 public:
+  ItemPandora(Coords xy, int tv);
   virtual void collect(User &, vector<Caravana>::iterator &,
                        vector<Caravana> &);
 };
 class ItemTesouro : public Item {
 public:
+  ItemTesouro(Coords xy, int tv);
   virtual void collect(User &, vector<Caravana>::iterator &,
                        vector<Caravana> &);
 };
 class ItemJaula : public Item {
 public:
+  ItemJaula(Coords xy, int tv);
   virtual void collect(User &, vector<Caravana>::iterator &,
                        vector<Caravana> &);
 };
 class ItemMina : public Item {
 public:
+  ItemMina(Coords xy, int tv);
   virtual void collect(User &, vector<Caravana>::iterator &,
                        vector<Caravana> &);
 };
 class ItemSurpresa : public Item {
 public:
+  ItemSurpresa(Coords xy, int tv);
   virtual void collect(User &, vector<Caravana>::iterator &,
                        vector<Caravana> &);
 };

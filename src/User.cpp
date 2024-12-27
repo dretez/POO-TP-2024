@@ -1,4 +1,7 @@
-#include "../headers/SimComponents.h"
+#include "../headers/User.h"
+#include "../headers/Caravanas.h"
+#include "../headers/Deserto.h"
+#include "../headers/MapCells.h"
 
 User::User(Deserto &mapa, int money, vector<Caravana> &cars)
     : world(mapa), moedas(money), caravanas(cars) {};

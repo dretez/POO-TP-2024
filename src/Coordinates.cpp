@@ -1,3 +1,5 @@
+#include <bitset>
+
 #include "../headers/Coordinates.h"
 
 Coords::Coords(int xx, int yy, bool inbounds) : x(xx), y(yy) {
@@ -35,6 +37,16 @@ Coords Coords::normalize() const {
   return Coords(dx, dy);
 }
 
+array<Coords, 4> Coords::getAdjacent() const {
+  array<Coords, 4> adj;
+  for (unsigned int i = 0; i < 4; i++) {
+    bitset<2> bs = i;
+    int xx = x + ((1 * bs[0]) * (1 - 2 * bs[1]));
+    int yy = y + ((1 * !bs[0]) * (1 - 2 * bs[1]));
+    adj[i] = Coords(xx, yy);
+  }
+  return adj;
+}
 bool Coords::isAdjacent(Coords target) const {
   target = target.inbounds();
   Coords aux = (*this - target).normalize();

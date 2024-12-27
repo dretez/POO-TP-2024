@@ -8,10 +8,12 @@
 #include <vector>
 
 #include "Caravanas.h"
-#include "SimComponents.h"
+#include "Items.h"
 #include "Timer.h"
 
 using namespace std;
+
+class Deserto;
 
 class SimConfig {
 public:
@@ -40,12 +42,15 @@ public:
   void start();
   void fase1();
   void fase2();
+  void turno(Deserto &, vector<Caravana> &, vector<CaravanaBarbara> &, User &,
+             vector<Item> &);
 
   void execCmd(string cmd);
 
 private:
-  deque<string> cmdQueue;
+  vector<string> cmdQueue;
   Timer timer;
+  RandItemGenerator itemGen;
 };
 
 #endif // INCLUDE_HEADERS_SIMULADOR_H_

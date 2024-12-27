@@ -1,16 +1,17 @@
 #include "../headers/Caravanas.h"
-#include "../headers/SimComponents.h"
+#include "../headers/Items.h"
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
-                   unsigned int capA)
+                   unsigned int capA, unsigned int lt)
     : pos(xy), tripulantes(trip), capTrip(capT), capMerc(capC), capAgua(capA),
-      mercadoria(0), agua(capA / 2), superSpeed(false) {}
+      mercadoria(0), agua(capA / 2), superSpeed(false), lifetime(lt) {}
 
-CaravanaComercio::CaravanaComercio(Coords xy) : Caravana(xy, 20, 20, 40, 200) {}
-CaravanaMilitar::CaravanaMilitar(Coords xy) : Caravana(xy, 20, 40, 5, 400) {}
-CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 5, 10, 5, 100) {}
-CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int tv)
-    : Caravana(xy, 40, 40, 0, 0) {}
+CaravanaComercio::CaravanaComercio(Coords xy)
+    : Caravana(xy, 20, 20, 40, 200, 5) {}
+CaravanaMilitar::CaravanaMilitar(Coords xy) : Caravana(xy, 20, 40, 5, 400, 7) {}
+CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 5, 10, 5, 100, 1) {}
+CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int lt)
+    : Caravana(xy, 40, 40, 0, 0, lt) {}
 
 Coords Caravana::getPos() { return pos; }
 
@@ -29,11 +30,13 @@ void Caravana::changeMerc(int qtd) {
 unsigned int Caravana::getMaxTripulantes() { return capTrip; }
 unsigned int Caravana::getTripulantes() { return tripulantes; }
 void Caravana::setTripulantes(unsigned int n) { tripulantes = n; }
-void Caravana::changeTripulantes(int n) {
-  tripulantes += tripulantes < -n ? -tripulantes : n;
+int Caravana::changeTripulantes(int n) {
+  int change = tripulantes < -n ? -tripulantes : n;
+  tripulantes += change;
+  return change;
 }
 
-int Caravana::attack() { return rand() % (tripulantes + 1); }
+unsigned int Caravana::attack() { return rand() % (tripulantes + 1); }
 
 unsigned int Caravana::getMaxMvs() {
   return maxTargPathSize * (superSpeed ? 2 : 1);

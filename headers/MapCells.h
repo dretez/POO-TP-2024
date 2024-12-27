@@ -2,8 +2,12 @@
 #define INCLUDE_HEADERS_MAPCELLS_H_
 
 #include <cstdint>
+#include <memory>
+#include <vector>
 
 #include "Coordinates.h"
+
+class Caravana;
 
 #define STRM_FLAG_BIT 0b00000001
 #define CRVN_FLAG_BIT 0b00000010
@@ -27,7 +31,7 @@ public:
   void setCaravana();
   void unsetCaravana();
   void toggleCaravana();
-  bool getCaravana() const;
+  bool hasCaravana() const;
 
 private:
   uint8_t flags;
@@ -44,10 +48,13 @@ public:
   unsigned short getType() const;
   Coords getCoords() const;
   bool isValid() const;
+  Caravana &getLocalCaravana();
+  void setLocalCar(Caravana *);
 
 private:
   unsigned short type;
   const Coords pos;
+  Caravana *car;
 };
 
 #endif // INCLUDE_HEADERS_MAPCELLS_H_
