@@ -43,7 +43,7 @@ public:
   unsigned int getLifetime();
   void setMvMode(unsigned int mode);
   unsigned int getMvMode();
-  map<unsigned int, Coords> getTargetPath();
+  map<unsigned int, Coords> &getTargetPath();
   void resetTargetPath();
   void mv(Coords dir);
   virtual void mvEmpty();

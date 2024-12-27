@@ -8,9 +8,11 @@
 #include "Coordinates.h"
 
 class Caravana;
+class Item;
 
 #define STRM_FLAG_BIT 0b00000001
 #define CRVN_FLAG_BIT 0b00000010
+#define ITEM_FLAG_BIT 0b00000100
 
 using namespace std;
 
@@ -33,6 +35,11 @@ public:
   void toggleCaravana();
   bool hasCaravana() const;
 
+  void setItem();
+  void unsetItem();
+  void toggleItem();
+  bool hasItem() const;
+
 private:
   uint8_t flags;
 };
@@ -49,12 +56,16 @@ public:
   Coords getCoords() const;
   bool isValid() const;
   Caravana &getLocalCaravana();
+  Item &getLocalItem();
   void setLocalCar(Caravana *);
+  void setLocalItem(Item *);
+  void swapCaravanas(Cell &);
 
 private:
   unsigned short type;
   const Coords pos;
   Caravana *car;
+  Item *item;
 };
 
 #endif // INCLUDE_HEADERS_MAPCELLS_H_

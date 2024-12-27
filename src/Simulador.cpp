@@ -53,18 +53,6 @@ void Simulador::turno(Deserto &world, vector<Caravana> &userCars,
 
   for (auto uc = userCars.begin(); uc != userCars.end(); uc++) {
     switch (uc->getMvMode()) {
-    case MOV_USR: {
-      map<unsigned int, Coords>::iterator i;
-      for (i = uc->getTargetPath().begin(); i != uc->getTargetPath().end();
-           i++) {
-        if (!world[i->second].isValid()) {
-          break;
-        }
-        uc->setPos(i->second);
-      }
-      uc->resetTargetPath();
-      break;
-    }
     case MOV_RUN:
     case MOV_AUTO:
       uc->mvAuto(userCars, enemyCars, items);
@@ -72,11 +60,31 @@ void Simulador::turno(Deserto &world, vector<Caravana> &userCars,
     case MOV_EMPTY:
       uc->mvEmpty();
       if (uc->getLifetime() == 0) {
+        world[uc->getPos()].setLocalCar(nullptr);
         userCars.erase(uc);
       }
       break;
+    case MOV_USR:
     default:
       break;
+    }
+    for (auto i = uc->getTargetPath().begin(); i != uc->getTargetPath().end();
+         i++) {
+      if (!world[i->second].isValid())
+        break;
+      world[uc->getPos()].setLocalCar(nullptr);
+      uc->setPos(i->second);
+      world[uc->getPos()].setLocalCar(&(*uc));
+    }
+    uc->resetTargetPath();
+
+    for (Coords pos : uc->getPos().getAdjacent()) {
+      if (!world[pos].hasItem())
+        continue;
+      Item &it = world[pos].getLocalItem();
+      it.collect(utilizador, uc, userCars);
+      world[pos].setLocalItem(nullptr);
+      items.erase(find(items.begin(), items.end(), it));
     }
   }
 
@@ -147,8 +155,8 @@ void Simulador::turno(Deserto &world, vector<Caravana> &userCars,
 
   if (!(timer.get() % time2newItem)) {
     Coords randPos = world.getRandomFreeCell().getCoords();
+    Item it = itemGen.get(randPos, itemLifeTime);
     items.push_back(itemGen.get(randPos, itemLifeTime));
+    world[randPos].setLocalItem(&(*items.end()));
   }
-
-  /*************************** DESTROI CARAVANAS ***************************/
 }
