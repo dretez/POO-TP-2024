@@ -1,7 +1,7 @@
 #ifndef INCLUDE_HEADERS_TIMER_H_
 #define INCLUDE_HEADERS_TIMER_H_
 
-class Timer {
+/*class Timer {
 public:
   Timer(unsigned int clock = 0);
 
@@ -13,6 +13,16 @@ public:
 
 private:
   unsigned int clock;
+};
+*/
+
+class Timer {
+private:
+  unsigned int startTime;
+
+public:
+  Timer(unsigned int startTime);
+  unsigned int getStartTime() const;
 };
 
 #endif // INCLUDE_HEADERS_TIMER_H_

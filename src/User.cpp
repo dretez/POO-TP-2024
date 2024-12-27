@@ -1,4 +1,4 @@
-#include "../headers/User.h"
+/*#include "../headers/User.h"
 
 User::User(Deserto &mapa, int money, vector<Caravana> &cars)
     : world(mapa), moedas(money), caravanas(cars) {};
@@ -42,3 +42,4 @@ void User::sellMercadoria(Caravana &car, int preco) {
   moedas += preco * car.getMerc();
   car.setMerc(0);
 }
+*/

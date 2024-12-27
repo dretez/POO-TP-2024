@@ -1,4 +1,4 @@
-#include "../headers/Caravana.h"
+/*#include "../headers/Caravana.h"
 #include <map>
 
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
@@ -72,7 +72,7 @@ void CaravanaComercio::mvAuto(vector<Caravana> &usr,
        * verificamos se está numa posição adjacente, se estiver recolhemos o
        * item, senão movemo-nos para uma coordenada adjacente ao item aleatória
        * com uma distância à coordenada atual de 1.
-       */
+
       mv(auxi->getPos());
       return;
     }
@@ -135,7 +135,7 @@ void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
    *    them to a user caravan (this action has a 5% sucess rate);
    *  - After "hitting", the secret caravan changes to "flee" mode, where it
    *    gets as far away from the barbarians as possible.
-   */
+
 }
 
 void CaravanaSecreta::mvEmpty() {
@@ -168,3 +168,4 @@ void Caravana::apanhaItem(Item i) {
     break;
   }
 }
+*/
