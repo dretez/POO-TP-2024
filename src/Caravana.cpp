@@ -1,6 +1,11 @@
-/*#include "../headers/Caravana.h"
+#include "../headers/Caravana.h"
+#include "../headers/Coordinates.h"
+
+#include <iostream>
 #include <map>
 
+using namespace std;
+/*
 Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
                    unsigned int capA)
     : pos(xy), tripulantes(trip), capTrip(capT), capMerc(capC), capAgua(capA),
@@ -13,6 +18,7 @@ CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int tv)
     : Caravana(xy, 40, 40, 0, 0) {}
 
 Coords Caravana::getPos() { return pos; }
+int Caravana::getId() const  { return id; }
 
 unsigned int Caravana::getMaxAgua() { return capAgua; }
 unsigned int Caravana::getAgua() { return agua; }
@@ -169,3 +175,15 @@ void Caravana::apanhaItem(Item i) {
   }
 }
 */
+
+int Caravana::getId() const  { return id; }
+void Caravana::Info() const {
+
+    std::cout << "ID: " << id
+        << "\n- Pos: (" << pos.getx() << ", " << pos.gety() << ")"
+              << "\n- Mercadoria: " << mercadoria << "/" << capMerc
+              << "\n- Agua: " << agua << "/" << capAgua
+              << "\n- Tripulacao: " << tripulantes << "/" << capTrip
+              << std::endl;
+
+}

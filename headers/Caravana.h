@@ -20,6 +20,8 @@ class CaravanaBarbara;
 
 class Caravana {
 public:
+
+  [[nodiscard]] int getId() const;
   Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
            unsigned int capA);
 
@@ -55,12 +57,14 @@ public:
   void apanhaItem(Item i);
 
   int attack();
+   void Info() const;;
 
 protected:
   unsigned int mvMode, maxTargPathSize;
 
 private:
   int id;
+  int posx, posy;
   Coords pos;
   map<unsigned int, Coords> targetPath;
   unsigned int capTrip, capMerc, capAgua;
