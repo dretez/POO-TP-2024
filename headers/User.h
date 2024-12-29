@@ -1,6 +1,7 @@
 #ifndef INCLUDE_HEADERS_USER_H_
 #define INCLUDE_HEADERS_USER_H_
 
+#include <memory>
 #include <vector>
 
 using namespace std;
@@ -11,7 +12,7 @@ class Cidade;
 
 class User {
 public:
-  User(Deserto &mapa, int money, vector<Caravana> &cars);
+  User(Deserto &mapa, int money, vector<shared_ptr<Caravana>> &cars);
 
   void buyCaravana(Cidade &cid, int preco = 100);
   void buyTripulante(Caravana &car, unsigned int qtd);
@@ -25,7 +26,7 @@ public:
 private:
   int moedas;
   Deserto &world;
-  vector<Caravana> &caravanas;
+  vector<shared_ptr<Caravana>> &caravanas;
 };
 
 #endif // INCLUDE_HEADERS_USER_H_

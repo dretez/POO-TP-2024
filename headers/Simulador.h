@@ -42,15 +42,15 @@ public:
   void start();
   void fase1();
   void fase2();
-  void turno(Deserto &, vector<Caravana> &, vector<CaravanaBarbara> &, User &,
-             vector<Item> &);
+  void turno(Deserto &, vector<shared_ptr<Caravana>> &usercars,
+             vector<shared_ptr<Caravana>> &enmycars, User &,
+             vector<shared_ptr<Item>> &);
 
   void execCmd(string cmd);
 
 private:
   vector<string> cmdQueue;
   Timer timer;
-  RandItemGenerator itemGen;
 };
 
 #endif // INCLUDE_HEADERS_SIMULADOR_H_

@@ -11,7 +11,6 @@ class Caravana;
 class Item;
 
 #define STRM_FLAG_BIT 0b00000001
-#define CRVN_FLAG_BIT 0b00000010
 #define ITEM_FLAG_BIT 0b00000100
 
 using namespace std;
@@ -25,21 +24,6 @@ public:
   void toggleAll();
   uint8_t getFlags() const;
 
-  void setStorm();
-  void unsetStorm();
-  void toggleStorm();
-  bool getStorm() const;
-
-  void setCaravana();
-  void unsetCaravana();
-  void toggleCaravana();
-  bool hasCaravana() const;
-
-  void setItem();
-  void unsetItem();
-  void toggleItem();
-  bool hasItem() const;
-
 private:
   uint8_t flags;
 };
@@ -48,24 +32,56 @@ private:
 #define MOUNT_CELL 1
 #define CITY_CELL 2
 
-class Cell : public CellFlags {
+class Cell {
 public:
-  Cell(unsigned short type, Coords p);
+  Cell(Coords p);
 
   unsigned short getType() const;
   Coords getCoords() const;
-  bool isValid() const;
-  Caravana &getLocalCaravana();
-  Item &getLocalItem();
-  void setLocalCar(Caravana *);
-  void setLocalItem(Item *);
-  void swapCaravanas(Cell &);
+  virtual bool isValid() const;
+
+  bool hasCaravana() const;
+  shared_ptr<Caravana> getCaravana() const;
+  void setCaravana(shared_ptr<Caravana> &);
+  void unsetCaravana();
+
+  bool hasItem() const;
+  shared_ptr<Item> getItem() const;
+  void setItem(shared_ptr<Item> &);
+  void unsetItem();
+
+  bool getStorm() const;
+  void setStorm();
+  void unsetStorm();
+  void toggleStorm();
 
 private:
   unsigned short type;
   const Coords pos;
-  Caravana *car;
-  Item *item;
+  weak_ptr<Caravana> car;
+  weak_ptr<Item> item;
+  bool storm;
+};
+
+class DesertCell : public Cell {
+public:
+  DesertCell(Coords);
+
+  virtual bool isValid() const;
+};
+
+class CityCell : public Cell {
+public:
+  CityCell(Coords);
+
+  virtual bool isValid() const;
+};
+
+class MountainCell : public Cell {
+public:
+  MountainCell(Coords);
+
+  virtual bool isValid() const;
 };
 
 #endif // INCLUDE_HEADERS_MAPCELLS_H_

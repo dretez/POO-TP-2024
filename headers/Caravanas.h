@@ -2,6 +2,7 @@
 #define INCLUDE_HEADERS_CARAVANAS_H_
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include "Coordinates.h"
@@ -11,8 +12,14 @@
 #define MOV_EMPTY 2
 #define MOV_RUN 3
 
+class Caravana;
 class CaravanaBarbara;
 class Item;
+
+class RandCaravanGenerator {
+public:
+  static void gen(vector<shared_ptr<Caravana>> &to, Coords);
+};
 
 class Caravana {
 public:
@@ -47,9 +54,9 @@ public:
   void resetTargetPath();
   void mv(Coords dir);
   virtual void mvEmpty();
-  virtual void mvAuto(const vector<Caravana> &usr,
-                      const vector<CaravanaBarbara> &enemy,
-                      const vector<Item> &);
+  virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &);
 
   unsigned int attack();
 
@@ -73,8 +80,9 @@ public:
   CaravanaComercio(Coords xy);
 
   virtual void mvEmpty();
-  virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &);
+  virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &);
 };
 
 class CaravanaMilitar : public Caravana {
@@ -82,8 +90,9 @@ public:
   CaravanaMilitar(Coords xy);
 
   virtual void mvEmpty();
-  virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &);
+  virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &);
 };
 
 class CaravanaSecreta : public Caravana {
@@ -91,8 +100,9 @@ public:
   CaravanaSecreta(Coords xy);
 
   virtual void mvEmpty();
-  virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &);
+  virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &);
 };
 
 class CaravanaBarbara : public Caravana {
@@ -100,8 +110,9 @@ public:
   CaravanaBarbara(Coords xy, unsigned int lt = 60);
 
   virtual void mvEmpty();
-  virtual void mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &);
+  virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &);
 };
 
 #endif // INCLUDE_HEADERS_CARAVANAS_H_

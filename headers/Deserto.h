@@ -1,6 +1,8 @@
 #ifndef INCLUDE_HEADERS_DESERTO_H_
 #define INCLUDE_HEADERS_DESERTO_H_
 
+#include <memory>
+
 #include "Coordinates.h"
 #include "MapCells.h"
 
@@ -8,13 +10,13 @@ class Deserto : private Coords {
 public:
   Deserto(unsigned int w, unsigned int h);
 
-  Cell &getRandomFreeCell();
+  shared_ptr<Cell> getRandomFreeCell();
 
-  Cell &operator[](Coords);
+  shared_ptr<Cell> operator[](Coords);
 
 private:
   unsigned int maxItens;
-  vector<Cell> mapa;
+  vector<shared_ptr<Cell>> mapa;
 };
 
 #endif // INCLUDE_HEADERS_DESERTO_H_

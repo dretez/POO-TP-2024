@@ -1,35 +1,30 @@
 #include "../headers/MapCells.h"
-
-/********************************* CELL FLAGS *********************************/
-
-CellFlags::CellFlags(uint8_t f) { flags = f; }
-
-void CellFlags::setAll() {
-  setStorm();
-  setCaravana();
-}
-void CellFlags::unsetAll() { flags = 0; }
-void CellFlags::toggleAll() {
-  toggleStorm();
-  toggleCaravana();
-}
-uint8_t CellFlags::getFlags() const { return flags; }
-
-void CellFlags::setStorm() { flags |= STRM_FLAG_BIT; }
-void CellFlags::unsetStorm() { flags &= ~STRM_FLAG_BIT; }
-void CellFlags::toggleStorm() { flags ^= STRM_FLAG_BIT; }
-bool CellFlags::getStorm() const { return flags & STRM_FLAG_BIT; }
-
-void CellFlags::setCaravana() { flags |= CRVN_FLAG_BIT; }
-void CellFlags::unsetCaravana() { flags &= ~CRVN_FLAG_BIT; }
-void CellFlags::toggleCaravana() { flags ^= CRVN_FLAG_BIT; }
-bool CellFlags::hasCaravana() const { return flags & CRVN_FLAG_BIT; }
+#include <memory>
 
 /************************************ CELL ************************************/
 
-Cell::Cell(unsigned short t, Coords p)
-    : CellFlags(0), type(t), pos(p), car(nullptr) {}
+Cell::Cell(Coords p) : pos(p) {}
 
-bool Cell::isValid() const {
-  return (type != MOUNT_CELL) && (!hasCaravana() | (type == CITY_CELL));
-}
+bool Cell::isValid() const { return !hasCaravana(); }
+
+bool Cell::hasCaravana() const { return !!car.lock(); }
+void Cell::setCaravana(shared_ptr<Caravana> &c) { car = c; }
+void Cell::unsetCaravana() { car.reset(); }
+shared_ptr<Caravana> Cell::getCaravana() const { return car.lock(); }
+
+bool Cell::hasItem() const { return !!item.lock(); }
+void Cell::setItem(shared_ptr<Item> &i) { item = i; }
+void Cell::unsetItem() { item.reset(); }
+shared_ptr<Item> Cell::getItem() const { return item.lock(); }
+
+bool Cell::getStorm() const { return storm; }
+
+/******************************* DERIVED CELLS *******************************/
+
+DesertCell::DesertCell(Coords p) : Cell(p) {}
+CityCell::CityCell(Coords p) : Cell(p) {}
+MountainCell::MountainCell(Coords p) : Cell(p) {}
+
+bool DesertCell::isValid() const { return !hasCaravana(); }
+bool CityCell::isValid() const { return true; }
+bool MountainCell::isValid() const { return false; }
