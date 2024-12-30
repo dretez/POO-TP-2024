@@ -58,6 +58,8 @@ void Simulador::turno(Deserto &world, User &user) {
 
   /***************************** MOSTRA BUFFER *****************************/
 
+  Buffer(*this, world, width, height).imprimir();
+
   /************************** LEITURA DE COMANDOS **************************/
 
   do {
@@ -454,7 +456,7 @@ int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
     }
     return 0;
   } else if (cmd[0] == CMD_F2_SAVE) {
-    savedBuffers.emplace_back(cmd[1]);
+    savedBuffers.emplace_back(*this, world, width, height, cmd[1]);
     return 0;
   } else if (cmd[0] == CMD_F2_LOAD) {
     for (auto buf : savedBuffers) {
