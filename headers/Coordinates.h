@@ -2,7 +2,6 @@
 #define INCLUDE_HEADERS_COORDINATES_H_
 
 #include <array>
-#include <cmath>
 
 using namespace std;
 

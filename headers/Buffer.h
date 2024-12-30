@@ -11,8 +11,9 @@
 
 class Buffer {
 public:
-  Buffer();
+  Buffer(string nome);
   ~Buffer();
+  string getNome() const;
   void limparBuffer();
   void moverCursor(int linha, int coluna);
   void escreverChar(char c);
@@ -22,6 +23,7 @@ public:
 private:
   int colunas;
   int linhas;
+  string nome;
 
   char **buffer;
   int cursorLinha;

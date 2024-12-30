@@ -3,24 +3,54 @@
 
 #include <cstdlib>
 #include <deque>
+#include <fstream>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Caravanas.h"
+#include "Deserto.h"
 #include "Items.h"
 #include "Timer.h"
+#include "User.h"
 
 using namespace std;
 
 class Deserto;
+class Buffer;
+class Command;
+
+/*class Fase1 {
+public:
+  Fase1(Simulador &);
+
+  void start();
+
+private:
+  Simulador &sim;
+};
+
+class Fase2 {
+public:
+  Fase2(Simulador &, unsigned int w, unsigned int h, int usrInitMny);
+
+  void start();
+
+private:
+  Simulador &sim;
+  Deserto world;
+  User user;
+  vector<shared_ptr<Caravana>> userCars;
+  vector<shared_ptr<Caravana>> enemyCars;
+};*/
 
 class SimConfig {
 public:
   SimConfig();
 
-  void loadConfFile(string confFileName);
-  void saveConfFile(string confFileName);
+  void loadConfFile(ifstream &confFile);
+  void saveConfFile(ifstream &confFile);
 
 protected:
   unsigned int width, height;
@@ -40,16 +70,21 @@ public:
   Simulador(unsigned int startTime = 1);
 
   void start();
-  void fase1();
-  void fase2();
-  void turno(Deserto &, vector<shared_ptr<Caravana>> &usercars,
-             vector<shared_ptr<Caravana>> &enmycars, User &,
-             vector<shared_ptr<Item>> &);
-
-  void execCmd(string cmd);
 
 private:
-  vector<string> cmdQueue;
+  void fase1();
+  bool fase2();
+  void turno(Deserto &, User &);
+
+  int execCmd(const Command &, Deserto &, User &);
+
+  unsigned int proxCount;
+  vector<Command> cmdQueue;
+  vector<Command>::iterator fileCmdQSavePoint;
+  vector<Buffer> savedBuffers;
+  vector<shared_ptr<Caravana>> userCars;
+  vector<shared_ptr<Caravana>> enemyCars;
+  vector<shared_ptr<Item>> items;
   Timer timer;
 };
 

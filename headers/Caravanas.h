@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Coordinates.h"
@@ -26,6 +27,10 @@ public:
   Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
            unsigned int capA, unsigned int lifetime);
 
+  int getId();
+  string info() const;
+  virtual string getTipo() const;
+
   void setPos(Coords pos);
   Coords getPos();
 
@@ -40,7 +45,7 @@ public:
   unsigned int getMaxMerc();
   unsigned int getMerc();
   void setMerc(unsigned int n);
-  void changeMerc(int qtd);
+  int changeMerc(int qtd);
 
   unsigned int getMaxTripulantes();
   unsigned int getTripulantes();
@@ -79,6 +84,8 @@ class CaravanaComercio : public Caravana {
 public:
   CaravanaComercio(Coords xy);
 
+  virtual string getTipo() const;
+
   virtual void mvEmpty();
   virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
                       const vector<shared_ptr<Caravana>> &enemy,
@@ -88,6 +95,8 @@ public:
 class CaravanaMilitar : public Caravana {
 public:
   CaravanaMilitar(Coords xy);
+
+  virtual string getTipo() const;
 
   virtual void mvEmpty();
   virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
@@ -99,6 +108,8 @@ class CaravanaSecreta : public Caravana {
 public:
   CaravanaSecreta(Coords xy);
 
+  virtual string getTipo() const;
+
   virtual void mvEmpty();
   virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,
                       const vector<shared_ptr<Caravana>> &enemy,
@@ -108,6 +119,8 @@ public:
 class CaravanaBarbara : public Caravana {
 public:
   CaravanaBarbara(Coords xy, unsigned int lt = 60);
+
+  virtual string getTipo() const;
 
   virtual void mvEmpty();
   virtual void mvAuto(const vector<shared_ptr<Caravana>> &usr,

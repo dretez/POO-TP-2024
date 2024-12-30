@@ -1,4 +1,5 @@
 #include <bitset>
+#include <cmath>
 
 #include "../headers/Coordinates.h"
 

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include "Coordinates.h"
+
 #define CRVN_COMR_MASK 0b00000001
 #define CRVN_MILT_MASK 0b00000010
 #define CRVN_SCRT_MASK 0b00000100
@@ -28,12 +30,14 @@ private:
 
 class Cidade : public CidFlags {
 public:
-  Cidade(char n);
+  Cidade(char n, Coords pos);
 
   char getNome();
+  Coords getPos();
 
 private:
   char nome;
+  Coords pos;
 };
 
 #endif // INCLUDE_HEADERS_CIDADE_H_

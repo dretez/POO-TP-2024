@@ -39,6 +39,7 @@ public:
   unsigned short getType() const;
   Coords getCoords() const;
   virtual bool isValid() const;
+  virtual bool isCity() const;
 
   bool hasCaravana() const;
   shared_ptr<Caravana> getCaravana() const;
@@ -75,6 +76,7 @@ public:
   CityCell(Coords);
 
   virtual bool isValid() const;
+  virtual bool isCity() const;
 };
 
 class MountainCell : public Cell {
