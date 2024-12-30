@@ -8,7 +8,7 @@
 
 Buffer::Buffer(Simulador &s, Deserto &map, unsigned int w, unsigned int h,
                string n)
-    : sim(s), world(map), colunas(w), linhas(h), nome(n) {
+    : sim(&s), world(&map), colunas(w), linhas(h), nome(n) {
   alocarBuffer();
   writeItems();
   writeCaravans();
@@ -78,6 +78,12 @@ void Buffer::imprimir() const {
   }
 };
 
+string Buffer::getNome() const
+{
+  return nome;
+}
+
+
 void Buffer::operator<<(char c) {
   buffer[cursor.getx()][cursor.gety()] = c;
   cursor.setx(cursor.getx() + 1 % colunas);
@@ -113,9 +119,9 @@ void Buffer::operator<<(DesertCell c) {
 void Buffer::operator<<(CityCell c) {
   Coords temp = cursor;
   cursor = c.getCoords();
-  for (auto city : world.getCities()) {
+  for (auto city : world->getCities()) {
     if (!(city.getPos() == cursor)) {
-      if (city.getNome() != (*world.getCities().end()).getNome())
+      if (city.getNome() != (*world->getCities().end()).getNome())
         *this << ' ';
       continue;
     }
@@ -160,19 +166,29 @@ void Buffer::operator<<(CaravanaBarbara c) {
   cursor = temp;
 }
 
+Buffer &Buffer::operator=(const Buffer& b){
+  cursorColuna = b.cursorColuna;
+  cursorLinha = b.cursorLinha;
+  colunas = b.colunas;
+  linhas = b.linhas;
+  liberarBuffer();
+  buffer = b.buffer;
+  return *this;
+}
+
 void Buffer::writeMap() {
   for (int i = 0; i < linhas * colunas; i++)
-    *this << *world[cursor];
+    *this << *(*world)[cursor];
 }
 
 void Buffer::writeCaravans() {
-  for (auto uc : sim.getUCars())
+  for (auto uc : sim->getUCars())
     *this << *uc;
-  for (auto ec : sim.getECars())
+  for (auto ec : sim->getECars())
     *this << *ec;
 }
 
 void Buffer::writeItems() {
-  for (auto uc : sim.getItems())
+  for (auto uc : sim->getItems())
     *this << *uc;
 }

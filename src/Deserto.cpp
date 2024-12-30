@@ -6,6 +6,8 @@ Deserto::Deserto(unsigned int w, unsigned int h) : Coords(0, 0) {
   setWorldDimensions(w, h);
 }
 
+vector<Cidade> &Deserto::getCities() { return cities; }
+
 shared_ptr<Cell> Deserto::getRandomFreeCell() {
   shared_ptr<Cell> r;
   do {

@@ -1,49 +1,18 @@
 #ifndef INCLUDE_HEADERS_SIMULADOR_H_
 #define INCLUDE_HEADERS_SIMULADOR_H_
 
-#include <cstdlib>
-#include <deque>
-#include <fstream>
 #include <memory>
 #include <string>
-#include <utility>
 #include <vector>
 
 #include "Caravanas.h"
 #include "Deserto.h"
 #include "Items.h"
 #include "Timer.h"
-#include "User.h"
+#include "Command.h"
+#include "Buffer.h"
 
 using namespace std;
-
-class Deserto;
-class Buffer;
-class Command;
-
-/*class Fase1 {
-public:
-  Fase1(Simulador &);
-
-  void start();
-
-private:
-  Simulador &sim;
-};
-
-class Fase2 {
-public:
-  Fase2(Simulador &, unsigned int w, unsigned int h, int usrInitMny);
-
-  void start();
-
-private:
-  Simulador &sim;
-  Deserto world;
-  User user;
-  vector<shared_ptr<Caravana>> userCars;
-  vector<shared_ptr<Caravana>> enemyCars;
-};*/
 
 class SimConfig {
 public:
@@ -71,15 +40,16 @@ public:
 
   void start();
 
-  vector<shared_ptr<Caravana>> &getUCars() const;
-  vector<shared_ptr<Caravana>> &getECars() const;
-  vector<shared_ptr<Item>> &getItems() const;
+  vector<shared_ptr<Caravana>> &getUCars();
+  vector<shared_ptr<Caravana>> &getECars();
+  vector<shared_ptr<Item>> &getItems();
 
 private:
   void fase1();
   bool fase2();
   void turno(Deserto &, User &);
 
+  int execF1Cmd(const Command &cmd);
   int execCmd(const Command &, Deserto &, User &);
 
   unsigned int proxCount;

@@ -3,6 +3,12 @@
 #include "../headers/User.h"
 
 Item::Item(Coords xy, int tv) : pos(xy), tempovida(tv) {}
+ItemPandora::ItemPandora(Coords xy, int tv) : Item(xy, tv) { }
+ItemTesouro::ItemTesouro(Coords xy, int tv) : Item(xy, tv) { }
+ItemJaula::ItemJaula(Coords xy, int tv) : Item(xy, tv) { }
+ItemMina::ItemMina(Coords xy, int tv) : Item(xy, tv) { }
+ItemSurpresa::ItemSurpresa(Coords xy, int tv) : Item(xy, tv) { }
+
 
 Coords Item::getPos() { return pos; }
 void Item::decrTempoVida() { tempovida--; }

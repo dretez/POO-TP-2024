@@ -7,6 +7,8 @@ Coords::Coords(int xx, int yy, bool inbounds) : x(xx), y(yy) {
   if (inbounds)
     *this = (*this).inbounds();
 }
+int Coords::width = 0;
+int Coords::height = 0;
 
 void Coords::setWorldDimensions(int w, int h) {
   width = w;

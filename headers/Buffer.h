@@ -39,7 +39,7 @@ public:
   void writeItems();
 
   void operator<<(char);
-  void operator<<(const std::string);
+  void operator<<(std::string);
   void operator<<(int);
   void operator<<(Item);
   void operator<<(Cell);
@@ -51,6 +51,8 @@ public:
   void operator<<(CaravanaMilitar);
   void operator<<(CaravanaSecreta);
   void operator<<(CaravanaBarbara);
+
+  Buffer &operator=(const Buffer&);
 
 private:
   void alocarBuffer();
@@ -64,8 +66,8 @@ private:
   Coords cursor;
   int cursorLinha;
   int cursorColuna;
-  Simulador &sim;
-  Deserto &world;
+  Simulador *sim;
+  Deserto *world;
 };
 
 #endif // BUFFER_H

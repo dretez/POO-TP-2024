@@ -23,3 +23,5 @@ bool CidFlags::getCSecreta() const { return flags & CRVN_SCRT_MASK; }
 Cidade::Cidade(char n, Coords p) : nome(n), pos(p) {}
 
 char Cidade::getNome() { return nome; }
+
+Coords Cidade::getPos() { return pos; }

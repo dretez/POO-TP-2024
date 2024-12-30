@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "../headers/Caravanas.h"
 #include "../headers/Items.h"
 
@@ -14,10 +16,43 @@ CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int lt)
     : Caravana(xy, 40, 40, 0, 0, lt) {}
 
 Coords Caravana::getPos() { return pos; }
+int Caravana::getId() { return id; }
+string Caravana::info() const {
+  ostringstream oss;
+  oss << "Caravana " << getTipo() << " (id=" << id << ")\n"
+      << "Coordenadas (" << pos.getx() << ", " << pos.gety() << ")\n"
+      << "Tripulantes: " << tripulantes << "\nMercadoria: " << mercadoria
+      << "\nÁgua: " << agua << "\nModo de movimento: ";
+  switch (mvMode) {
+  case MOV_USR:
+    oss << "manual\n";
+    break;
+  case MOV_EMPTY:
+    oss << "vazio\n";
+    break;
+  case MOV_RUN:
+  case MOV_AUTO:
+  default:
+    oss << "auto\n";
+    break;
+  }
+  if (superSpeed)
+    oss << "Esta caravana está super veloz!\n";
+  return oss.str();
+}
+bool Caravana::ownedByUsr() { return userOwned; }
+unsigned int Caravana::getLifetime() { return lifetime; }
+
 
 unsigned int Caravana::getMaxAgua() { return capAgua; }
 unsigned int Caravana::getAgua() { return agua; }
 void Caravana::usaAgua(unsigned int qtd) { agua -= agua < qtd ? agua : qtd; }
+int Caravana::changeAgua(int qtd) {
+  int change = -qtd > agua ? agua : qtd;
+  agua += change;
+  return change;
+}
+
 void Caravana::refillAgua() { agua = capAgua; }
 
 unsigned int Caravana::getMaxMerc() { return capMerc; }
@@ -40,10 +75,22 @@ int Caravana::changeTripulantes(int n) {
 
 unsigned int Caravana::attack() { return rand() % (tripulantes + 1); }
 
+void Caravana::setMvMode(unsigned int mode) { mvMode = mode; }
+unsigned int Caravana::getMvMode() { return mvMode; }
+string Caravana::getTipo() const { return "Base"; }
+string CaravanaComercio::getTipo() const { return "de Comércio"; }
+string CaravanaMilitar::getTipo() const { return "Militar"; }
+string CaravanaSecreta::getTipo() const { return "Secreta"; }
+string CaravanaBarbara::getTipo() const { return "Bárbara"; }
+
+
 unsigned int Caravana::getMaxMvs() {
   return maxTargPathSize * (superSpeed ? 2 : 1);
 }
 void Caravana::resetTargetPath() { targetPath.clear(); }
+map<unsigned int, Coords> &Caravana::getTargetPath() { return targetPath; }
+void Caravana::setPos(Coords p) { pos = p; }
+
 
 void Caravana::mv(Coords target) {
   if (targetPath.size() >= getMaxMvs())

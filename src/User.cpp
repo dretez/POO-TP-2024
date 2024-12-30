@@ -6,6 +6,10 @@
 User::User(Deserto &mapa, int money, vector<shared_ptr<Caravana>> &cars)
     : world(mapa), moedas(money), caravanas(cars) {};
 
+void User::changeMoedas(int qtd) { moedas += qtd; }
+int User::getMoedas() { return moedas; }
+void User::setMoedas(int qtd) { moedas = qtd; }
+
 void User::buyCaravana(Cidade &cid, int preco) {}
 
 void User::buyTripulante(Caravana &car, unsigned int qtd) {

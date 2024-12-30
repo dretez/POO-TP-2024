@@ -11,11 +11,10 @@ using namespace std;
 
 class Command {
 public:
-  template <size_t S>
   static bool input(istream &from, vector<Command> &to,
-                    const array<string, S> &validCmds);
+                    const vector<string> &validCmds);
 
-  template <size_t S> bool validate(const array<string, S> &validCmds) const;
+  bool validate(const vector<string> &validCmds) const;
   int argc() const;
   string operator[](int) const;
 
@@ -48,9 +47,9 @@ private:
 #define CMD_F2_EXIT "terminar"
 
 #define F1_VALID_CMD                                                           \
-  array<string, 2> { CMD_F1_CONF, CMD_F1_SAIR }
+  vector<string> { CMD_F1_CONF, CMD_F1_SAIR }
 #define F2_VALID_CMD                                                           \
-  array<string, 20> {                                                          \
+  vector<string> {                                                             \
     CMD_F2_EXEC, CMD_F2_PROX, CMD_F2_BUYC, CMD_F2_PRCE, CMD_F2_CITY,           \
         CMD_F2_CRVN, CMD_F2_BUYM, CMD_F2_SELL, CMD_F2_MOVE, CMD_F2_AUTO,       \
         CMD_F2_STOP, CMD_F2_BARB, CMD_F2_SAND, CMD_F2_COIN, CMD_F2_BUYT,       \
@@ -58,15 +57,15 @@ private:
   }
 
 #define CMD_1ARG                                                               \
-  array<string, 4> { CMD_F1_SAIR, CMD_F2_PRCE, CMD_F2_LIST, CMD_F2_EXIT }
+  vector<string> { CMD_F1_SAIR, CMD_F2_PRCE, CMD_F2_LIST, CMD_F2_EXIT }
 #define CMD_2ARG                                                               \
-  array<string, 11> {                                                          \
+  vector<string> {                                                             \
     CMD_F1_CONF, CMD_F2_EXEC, CMD_F2_CITY, CMD_F2_CRVN, CMD_F2_SELL,           \
         CMD_F2_AUTO, CMD_F2_STOP, CMD_F2_COIN, CMD_F2_SAVE, CMD_F2_LOAD,       \
         CMD_F2_DELS                                                            \
   }
 #define CMD_3ARG                                                               \
-  array<string, 5> {                                                           \
+  vector<string> {                                                             \
     CMD_F2_BUYC, CMD_F2_BUYM, CMD_F2_MOVE, CMD_F2_BARB, CMD_F2_BUYT            \
   }
 #define CMD_4ARG                                                               \

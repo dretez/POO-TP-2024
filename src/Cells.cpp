@@ -5,6 +5,8 @@
 
 Cell::Cell(Coords p) : pos(p) {}
 
+Coords Cell::getCoords() const { return pos; }
+
 bool Cell::isValid() const { return !hasCaravana(); }
 
 bool Cell::hasCaravana() const { return !!car.lock(); }
@@ -18,6 +20,9 @@ void Cell::unsetItem() { item.reset(); }
 shared_ptr<Item> Cell::getItem() const { return item.lock(); }
 
 bool Cell::getStorm() const { return storm; }
+void Cell::setStorm() { storm = true; }
+void Cell::unsetStorm() { storm = false; }
+void Cell::toggleStorm() { storm = !storm; }
 
 /******************************* DERIVED CELLS *******************************/
 
@@ -28,3 +33,8 @@ MountainCell::MountainCell(Coords p) : Cell(p) {}
 bool DesertCell::isValid() const { return !hasCaravana(); }
 bool CityCell::isValid() const { return true; }
 bool MountainCell::isValid() const { return false; }
+
+bool Cell::isCity() const { return false; }
+bool CityCell::isCity() const { return true; }
+
+

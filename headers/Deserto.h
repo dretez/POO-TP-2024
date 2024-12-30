@@ -13,7 +13,7 @@ public:
   Deserto(unsigned int w, unsigned int h);
 
   shared_ptr<Cell> getRandomFreeCell();
-  vector<Cidade> getCities();
+  vector<Cidade> &getCities();
 
   shared_ptr<Cell> operator[](Coords);
 

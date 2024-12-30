@@ -14,19 +14,34 @@
 #include <utility>
 #include <vector>
 
-Simulador::Simulador(unsigned int startTime) : timer(startTime) {}
+SimConfig::SimConfig() {}
+Simulador::Simulador(unsigned int startTime) : timer(startTime), proxCount(0) {}
 
-void Simulador::start() {
-  while (1) {
+vector<shared_ptr<Item>>& Simulador::getItems() { return items; }
+
+
+void Simulador::start()
+{
+  while (true)
+  {
     fase1();
     fase2();
   }
 }
+vector<shared_ptr<Caravana>>& Simulador::getUCars() { return userCars; }
+vector<shared_ptr<Caravana>>& Simulador::getECars() { return enemyCars; }
+
 
 void Simulador::fase1() {
-  while (1) {
-    // recebe comando, se for exit para, se for config carrega configuação e
-    // passa à próxima fase, se não for nenhum volta a pedir comando.
+  cout << "Bien Venue";
+  while (true) {
+    do {
+      Command::input(cin, cmdQueue, F1_VALID_CMD);
+    } while (cmdQueue.empty());
+    auto cmd = cmdQueue.begin();
+    if (execF1Cmd(*cmd))
+      break;
+    cmdQueue.clear();
   }
 }
 
@@ -194,7 +209,7 @@ void Simulador::turno(Deserto &world, User &user) {
   }
 }
 
-int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
+int Simulador::execF1Cmd(const Command &cmd){
   if (cmd[0] == CMD_F1_CONF) {
     ifstream file(cmd[1]);
     if (!file) {
@@ -207,7 +222,10 @@ int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
     return 1;
   } else if (cmd[0] == CMD_F1_SAIR) {
     exit(0);
-  } else if (cmd[0] == CMD_F2_EXEC) {
+  }
+}
+int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
+  if (cmd[0] == CMD_F2_EXEC) {
     ifstream file(cmd[1]);
     if (!file) {
       cout << "Não foi possível abrir o ficheiro de comandos \"" << cmd[1]
@@ -459,7 +477,7 @@ int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
     savedBuffers.emplace_back(*this, world, width, height, cmd[1]);
     return 0;
   } else if (cmd[0] == CMD_F2_LOAD) {
-    for (auto buf : savedBuffers) {
+    for (const auto& buf : savedBuffers) {
       if (buf.getNome() != cmd[1])
         continue;
       buf.imprimir();
@@ -467,12 +485,12 @@ int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
     }
     cout << "Buffer " << cmd[1] << " não encontrado" << endl;
   } else if (cmd[0] == CMD_F2_LIST) {
-    for (auto buf : savedBuffers)
+    for (const auto& buf : savedBuffers)
       cout << buf.getNome() << '\n';
     cout << endl;
     return 0;
   } else if (cmd[0] == CMD_F2_DELS) {
-    for (auto buf = savedBuffers.begin(); buf != savedBuffers.end(); buf++) {
+    for (auto buf = savedBuffers.begin(); buf != savedBuffers.end(); ++buf) {
       if (buf->getNome() != cmd[1])
         continue;
       savedBuffers.erase(buf);
@@ -489,4 +507,22 @@ int Simulador::execCmd(const Command &cmd, Deserto &world, User &user) {
     cout << ' ' << cmd[i];
   cout << endl;
   return true;
+}
+
+void SimConfig::loadConfFile(ifstream &confFile) {
+  string discard;
+  confFile >> discard >> height;
+  confFile >> discard >> width;
+  for (int i = 0; i < height; i++) {
+    getline(confFile, discard);
+  }
+  confFile >> discard >> initMoedas;
+  confFile >> discard >> time2newItem;
+  confFile >> discard >> itemLifeTime;
+  confFile >> discard >> maxItems;
+  confFile >> discard >> mercSellVal;
+  confFile >> discard >> mercBuyVal;
+  confFile >> discard >> priceCar;
+  confFile >> discard >> time2newBarbarian;
+  confFile >> discard >> barbarianLifeTime;
 }
