@@ -71,6 +71,10 @@ public:
 
   void start();
 
+  vector<shared_ptr<Caravana>> &getUCars() const;
+  vector<shared_ptr<Caravana>> &getECars() const;
+  vector<shared_ptr<Item>> &getItems() const;
+
 private:
   void fase1();
   bool fase2();

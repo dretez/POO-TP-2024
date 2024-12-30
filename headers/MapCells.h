@@ -28,15 +28,10 @@ private:
   uint8_t flags;
 };
 
-#define DESERT_CELL 0
-#define MOUNT_CELL 1
-#define CITY_CELL 2
-
 class Cell {
 public:
   Cell(Coords p);
 
-  unsigned short getType() const;
   Coords getCoords() const;
   virtual bool isValid() const;
   virtual bool isCity() const;
@@ -57,7 +52,7 @@ public:
   void toggleStorm();
 
 private:
-  unsigned short type;
+  char type;
   const Coords pos;
   weak_ptr<Caravana> car;
   weak_ptr<Item> item;

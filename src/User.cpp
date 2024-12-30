@@ -3,13 +3,13 @@
 #include "../headers/Deserto.h"
 #include "../headers/MapCells.h"
 
-User::User(Deserto &mapa, int money, vector<Caravana> &cars)
+User::User(Deserto &mapa, int money, vector<shared_ptr<Caravana>> &cars)
     : world(mapa), moedas(money), caravanas(cars) {};
 
 void User::buyCaravana(Cidade &cid, int preco) {}
 
 void User::buyTripulante(Caravana &car, unsigned int qtd) {
-  if (world[car.getPos()].getType() != CITY_CELL)
+  if (world[car.getPos()]->isCity())
     return; // a caravana não está numa cidade
 
   unsigned int finalQtd = qtd;
@@ -23,7 +23,7 @@ void User::buyTripulante(Caravana &car, unsigned int qtd) {
 }
 
 void User::buyMercadoria(Caravana &car, unsigned int qtd, int preco) {
-  if (world[car.getPos()].getType() != CITY_CELL)
+  if (world[car.getPos()]->isCity())
     return; // a caravana não está numa cidade
 
   unsigned int finalQtd = qtd;
@@ -37,7 +37,7 @@ void User::buyMercadoria(Caravana &car, unsigned int qtd, int preco) {
 }
 
 void User::sellMercadoria(Caravana &car, int preco) {
-  if (world[car.getPos()].getType() != CITY_CELL)
+  if (world[car.getPos()]->isCity())
     return; // a caravana não está numa cidade
 
   moedas += preco * car.getMerc();
