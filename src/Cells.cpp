@@ -1,30 +1,40 @@
-#include "../headers/Deserto.h"
-
-/********************************* CELL FLAGS *********************************/
-
-CellFlags::CellFlags(uint8_t f) { flags.all = f; }
-
-void CellFlags::setAll() {
-  setStorm();
-  setCaravana();
-}
-void CellFlags::unsetAll() { flags.all = 0; }
-void CellFlags::toggleAll() {
-  toggleStorm();
-  toggleCaravana();
-}
-uint8_t CellFlags::getFlags() const { return flags.all; }
-
-void CellFlags::setStorm() { flags.storm |= STRM_FLAG_BIT; }
-void CellFlags::unsetStorm() { flags.storm &= ~STRM_FLAG_BIT; }
-void CellFlags::toggleStorm() { flags.storm ^= STRM_FLAG_BIT; }
-bool CellFlags::getStorm() const { return flags.storm & STRM_FLAG_BIT; }
-
-void CellFlags::setCaravana() { flags.caravana |= CRVN_FLAG_BIT; }
-void CellFlags::unsetCaravana() { flags.caravana &= ~CRVN_FLAG_BIT; }
-void CellFlags::toggleCaravana() { flags.caravana ^= CRVN_FLAG_BIT; }
-bool CellFlags::getCaravana() const { return flags.caravana & CRVN_FLAG_BIT; }
+#include "../headers/MapCells.h"
+#include <memory>
 
 /************************************ CELL ************************************/
 
-Cell::Cell(unsigned short t) : CellFlags(0), type(t) {}
+Cell::Cell(Coords p) : pos(p) {}
+
+Coords Cell::getCoords() const { return pos; }
+
+bool Cell::isValid() const { return !hasCaravana(); }
+
+bool Cell::hasCaravana() const { return !!car.lock(); }
+void Cell::setCaravana(shared_ptr<Caravana> &c) { car = c; }
+void Cell::unsetCaravana() { car.reset(); }
+shared_ptr<Caravana> Cell::getCaravana() const { return car.lock(); }
+
+bool Cell::hasItem() const { return !!item.lock(); }
+void Cell::setItem(shared_ptr<Item> &i) { item = i; }
+void Cell::unsetItem() { item.reset(); }
+shared_ptr<Item> Cell::getItem() const { return item.lock(); }
+
+bool Cell::getStorm() const { return storm; }
+void Cell::setStorm() { storm = true; }
+void Cell::unsetStorm() { storm = false; }
+void Cell::toggleStorm() { storm = !storm; }
+
+/******************************* DERIVED CELLS *******************************/
+
+DesertCell::DesertCell(Coords p) : Cell(p) {}
+CityCell::CityCell(Coords p) : Cell(p) {}
+MountainCell::MountainCell(Coords p) : Cell(p) {}
+
+bool DesertCell::isValid() const { return !hasCaravana(); }
+bool CityCell::isValid() const { return true; }
+bool MountainCell::isValid() const { return false; }
+
+bool Cell::isCity() const { return false; }
+bool CityCell::isCity() const { return true; }
+
+

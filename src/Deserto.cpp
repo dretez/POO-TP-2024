@@ -1,14 +1,22 @@
 #include "../headers/Deserto.h"
 
-Item::Item(Coords xy, int tv) : pos(xy), tempovida(tv), tipo(rand() % 5) {}
+#include <cstdlib>
 
-int Item::getTipo() { return tipo; }
+Deserto::Deserto(unsigned int w, unsigned int h) : Coords(0, 0) {
+  setWorldDimensions(w, h);
+}
 
-Coords Item::getPos() { return pos; }
+vector<Cidade> &Deserto::getCities() { return cities; }
 
-void Item::decrTempoVida() { tempovida--; }
+shared_ptr<Cell> Deserto::getRandomFreeCell() {
+  shared_ptr<Cell> r;
+  do {
+    r = mapa.at(rand() % mapa.size());
+  } while (!r->isValid());
+  return r;
+}
 
-Cell &Deserto::operator[](Coords xy) {
+shared_ptr<Cell> Deserto::operator[](Coords xy) {
   int idx = 0;
   idx += xy.getx() % width;
   idx += (xy.gety() % height) * width;

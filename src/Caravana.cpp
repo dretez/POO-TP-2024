@@ -1,71 +1,128 @@
-#include "../headers/Caravana.h"
-#include "../headers/Coordinates.h"
+#include <sstream>
 
-#include <iostream>
-#include <map>
+#include "../headers/Caravanas.h"
+#include "../headers/Items.h"
 
 using namespace std;
-/*
-Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
-                   unsigned int capA)
-    : pos(xy), tripulantes(trip), capTrip(capT), capMerc(capC), capAgua(capA),
-      mercadoria(0), agua(capA / 2) {}
 
-CaravanaComercio::CaravanaComercio(Coords xy) : Caravana(xy, 20, 20, 40, 200) {}
-CaravanaMilitar::CaravanaMilitar(Coords xy) : Caravana(xy, 20, 40, 5, 400) {}
-CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 0, 0, 0, 0) {}
-CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int tv)
-    : Caravana(xy, 40, 40, 0, 0) {}
+Caravana::Caravana(Coords xy, int trip, unsigned int capT, unsigned int capC,
+                   unsigned int capA, unsigned int lt)
+    : pos(xy), tripulantes(trip), capTrip(capT), capMerc(capC), capAgua(capA),
+      mercadoria(0), agua(capA / 2), superSpeed(false), lifetime(lt) {}
+
+CaravanaComercio::CaravanaComercio(Coords xy)
+    : Caravana(xy, 20, 20, 40, 200, 5) {}
+CaravanaMilitar::CaravanaMilitar(Coords xy) : Caravana(xy, 20, 40, 5, 400, 7) {}
+CaravanaSecreta::CaravanaSecreta(Coords xy) : Caravana(xy, 5, 10, 5, 100, 1) {}
+CaravanaBarbara::CaravanaBarbara(Coords xy, unsigned int lt)
+    : Caravana(xy, 40, 40, 0, 0, lt) {}
 
 Coords Caravana::getPos() { return pos; }
-int Caravana::getId() const  { return id; }
+
+int Caravana::getId() { return id; }
+string Caravana::info() const {
+  ostringstream oss;
+  oss << "Caravana " << getTipo() << " (id=" << id << ")\n"
+      << "Coordenadas (" << pos.getx() << ", " << pos.gety() << ")\n"
+      << "Tripulantes: " << tripulantes << "\nMercadoria: " << mercadoria
+      << "\nÁgua: " << agua << "\nModo de movimento: ";
+  switch (mvMode) {
+  case MOV_USR:
+    oss << "manual\n";
+    break;
+  case MOV_EMPTY:
+    oss << "vazio\n";
+    break;
+  case MOV_RUN:
+  case MOV_AUTO:
+  default:
+    oss << "auto\n";
+    break;
+  }
+  if (superSpeed)
+    oss << "Esta caravana está super veloz!\n";
+  return oss.str();
+}
+bool Caravana::ownedByUsr() { return userOwned; }
+unsigned int Caravana::getLifetime() { return lifetime; }
 
 unsigned int Caravana::getMaxAgua() { return capAgua; }
 unsigned int Caravana::getAgua() { return agua; }
 void Caravana::usaAgua(unsigned int qtd) { agua -= agua < qtd ? agua : qtd; }
+int Caravana::changeAgua(int qtd) {
+  int change = -qtd > agua ? agua : qtd;
+  agua += change;
+  return change;
+}
+
 void Caravana::refillAgua() { agua = capAgua; }
 
 unsigned int Caravana::getMaxMerc() { return capMerc; }
 unsigned int Caravana::getMerc() { return mercadoria; }
 void Caravana::setMerc(unsigned int n) { mercadoria = n; }
-void Caravana::changeMerc(int qtd) {
-  mercadoria += mercadoria < -qtd ? -mercadoria : qtd;
+int Caravana::changeMerc(int qtd) {
+  int change = mercadoria < -qtd ? -mercadoria : qtd;
+  mercadoria += change;
+  return change;
 }
 
 unsigned int Caravana::getMaxTripulantes() { return capTrip; }
 unsigned int Caravana::getTripulantes() { return tripulantes; }
 void Caravana::setTripulantes(unsigned int n) { tripulantes = n; }
-void Caravana::changeTripulantes(int n) {
-  tripulantes += tripulantes < -n ? -tripulantes : n;
+int Caravana::changeTripulantes(int n) {
+  int change = tripulantes < -n ? -tripulantes : n;
+  tripulantes += change;
+  return change;
 }
 
-int Caravana::attack() { return rand() % (tripulantes + 1); }
+unsigned int Caravana::attack() { return rand() % (tripulantes + 1); }
 
+void Caravana::setMvMode(unsigned int mode) { mvMode = mode; }
+unsigned int Caravana::getMvMode() { return mvMode; }
+string Caravana::getTipo() const { return "Base"; }
+string CaravanaComercio::getTipo() const { return "de Comércio"; }
+string CaravanaMilitar::getTipo() const { return "Militar"; }
+string CaravanaSecreta::getTipo() const { return "Secreta"; }
+string CaravanaBarbara::getTipo() const { return "Bárbara"; }
+
+unsigned int Caravana::getMaxMvs() {
+  return maxTargPathSize * (superSpeed ? 2 : 1);
+}
 void Caravana::resetTargetPath() { targetPath.clear(); }
+map<unsigned int, Coords> &Caravana::getTargetPath() { return targetPath; }
+void Caravana::setPos(Coords p) { pos = p; }
 
 void Caravana::mv(Coords target) {
-  if (targetPath.size() >= maxTargPathSize)
+  if (targetPath.size() >= getMaxMvs())
     return;
   Coords oldpos =
       targetPath.size() > 0 ? targetPath.at(targetPath.size() - 1) : pos;
   targetPath.insert({targetPath.size(), oldpos + target.normalize()});
 }
-void Caravana::mvAuto(vector<Caravana> &usr, vector<CaravanaBarbara> &enemy,
-                      vector<Item> &itens) {
+void Caravana::mvEmpty() { return; }
+void Caravana::mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                      const vector<shared_ptr<Caravana>> &enemy,
+                      const vector<shared_ptr<Item>> &) {
   return;
 }
-void Caravana::mvEmpty() { return; }
 
-void CaravanaComercio::mvAuto(vector<Caravana> &usr,
-                              vector<CaravanaBarbara> &enemy,
-                              vector<Item> &items) {
-  for (int i = 0; i < maxTargPathSize; i++) {
-    vector<Item>::iterator ii = items.begin();
-    int minDist = getPos().distance(ii->getPos());
-    vector<Item>::iterator auxi = ii;
+void CaravanaComercio::mvEmpty() {
+  // move random 5 times
+  if (lifetime == 0) {
+    // commit seppuku
+  }
+  lifetime--;
+}
+void CaravanaComercio::mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                              const vector<shared_ptr<Caravana>> &enemy,
+                              const vector<shared_ptr<Item>> &items) {
+  for (int i = 0; i < getMaxMvs(); i++) {
+    auto ii = items.begin();
+    int minDist = getPos().distance((*ii)->getPos());
+    auto auxi = ii;
     for (ii++; ii != items.end(); ii++) {
-      if (minDist > getPos().distance(ii->getPos())) {
-        minDist = getPos().distance(ii->getPos());
+      if (minDist > getPos().distance((*ii)->getPos())) {
+        minDist = getPos().distance((*ii)->getPos());
         auxi = ii;
       }
     }
@@ -78,62 +135,59 @@ void CaravanaComercio::mvAuto(vector<Caravana> &usr,
        * verificamos se está numa posição adjacente, se estiver recolhemos o
        * item, senão movemo-nos para uma coordenada adjacente ao item aleatória
        * com uma distância à coordenada atual de 1.
-
-      mv(auxi->getPos());
+       */
+      mv((*auxi)->getPos());
       return;
     }
 
-    vector<Caravana>::iterator ic = usr.begin();
-    minDist = getPos().distance(ic->getPos());
-    vector<Caravana>::iterator auxc = ic;
+    auto ic = usr.begin();
+    minDist = getPos().distance((*ic)->getPos());
+    auto auxc = ic;
 
     for (ic++; ic != usr.end(); ic++) {
-      if (ic.base() == this)
+      if ((*ic)->getId() == getId())
         continue;
-      if (minDist > getPos().distance(ic->getPos())) {
-        minDist = getPos().distance(ic->getPos());
+      if (minDist > getPos().distance((*ic)->getPos())) {
+        minDist = getPos().distance((*ic)->getPos());
         auxc = ic;
       }
     }
 
     if (minDist > 1) {
-      mv(auxc->getPos());
+      mv((*auxc)->getPos());
     }
   }
 }
 
-void CaravanaComercio::mvEmpty() {
-  // move random 5 times
-  if (lifetime == 0) {
-    // commit seppuku
-  }
-  lifetime--;
-}
-
-void CaravanaMilitar::mvAuto(vector<Caravana> &usr,
-                             vector<CaravanaBarbara> &enemy,
-                             vector<Item> &items) {
-  vector<Caravana>::iterator ic = usr.begin();
-  int minDist = getPos().distance(ic->getPos());
-  vector<Caravana>::iterator auxi = ic;
+void CaravanaMilitar::mvEmpty() {}
+void CaravanaMilitar::mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                             const vector<shared_ptr<Caravana>> &enemy,
+                             const vector<shared_ptr<Item>> &items) {
+  auto ic = usr.begin();
+  int minDist = getPos().distance((*ic)->getPos());
+  auto auxi = ic;
 
   for (ic++; ic != usr.end(); ic++) {
-    if (ic.base() == this)
+    if ((*ic)->getId() == getId())
       continue;
-    if (minDist > getPos().distance(ic->getPos())) {
-      minDist = getPos().distance(ic->getPos());
+    if (minDist > getPos().distance((*ic)->getPos())) {
+      minDist = getPos().distance((*ic)->getPos());
       auxi = ic;
     }
   }
 
   if (minDist <= 6) {
-    mv(auxi->getPos());
+    mv((*auxi)->getPos());
   }
 }
 
-void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
-                             vector<CaravanaBarbara> &enemy,
-                             vector<Item> &itens) {
+void CaravanaSecreta::mvEmpty() {
+  // destroy any caravan within a distance of 2
+  // commit seppuku
+}
+void CaravanaSecreta::mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                             const vector<shared_ptr<Caravana>> &enemy,
+                             const vector<shared_ptr<Item>> &items) {
   /* Moves randomly across the map. If it detects a barbarian caravan within 8
    * cells, it performs a hit-and-run:
    *  - It tries to approach the barbarian caravan;
@@ -141,49 +195,13 @@ void CaravanaSecreta::mvAuto(vector<Caravana> &usr,
    *    them to a user caravan (this action has a 5% sucess rate);
    *  - After "hitting", the secret caravan changes to "flee" mode, where it
    *    gets as far away from the barbarians as possible.
-
-}
-
-void CaravanaSecreta::mvEmpty() {
-  // destroy any caravan within a distance of 2
-  // commit seppuku
+   */
 }
 
 void CaravanaBarbara::mvEmpty() {
   // commit seppuku
 }
 
-void Caravana::apanhaItem(Item i) {
-  switch (i.getTipo()) {
-  case ITEM_PANDORA:
-    tripulantes /= 5;
-    break;
-  case ITEM_TESOURO:
-    // adiciona 10% às moedas do utilizador
-    break;
-  case ITEM_JAULA:
-    changeTripulantes((rand() % 10) + 1);
-    break;
-  case ITEM_MINA:
-    // commit seppuku
-    break;
-  case ITEM_SURPRESA:
-    // idk yet
-    break;
-  default:
-    break;
-  }
-}
-*/
-
-int Caravana::getId() const  { return id; }
-void Caravana::Info() const {
-
-    std::cout << "ID: " << id
-        << "\n- Pos: (" << pos.getx() << ", " << pos.gety() << ")"
-              << "\n- Mercadoria: " << mercadoria << "/" << capMerc
-              << "\n- Agua: " << agua << "/" << capAgua
-              << "\n- Tripulacao: " << tripulantes << "/" << capTrip
-              << std::endl;
-
-}
+void CaravanaBarbara::mvAuto(const vector<shared_ptr<Caravana>> &usr,
+                             const vector<shared_ptr<Caravana>> &enemy,
+                             const vector<shared_ptr<Item>> &items) {}
